@@ -1,0 +1,12 @@
+﻿@using BlazorToDoApp.Models
+
+@inject AppState AppState
+
+<button class="blue" @onclick="ChangeToBlue"></button>
+
+@code {
+    public void ChangeToBlue()
+    {
+        AppState.BackgroundColorChange("blue");
+    }
+}

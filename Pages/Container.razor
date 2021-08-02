@@ -1,0 +1,24 @@
+﻿@using BlazorToDoApp.Models
+@inject AppState AppState
+
+<div class="main">
+    <Red />
+    <Blue />
+</div>
+
+<style >
+    * {
+        background-color: @AppState.BackgroundColor;
+
+      }
+</style>
+
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        AppState.OnBackgroundColorChange += (sender, args) => StateHasChanged();
+    }
+
+}

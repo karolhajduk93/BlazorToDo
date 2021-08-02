@@ -1,0 +1,13 @@
+﻿.red {
+    background-color: red;
+    padding: 30px;
+    margin: 10px;
+    border: 5px solid white;
+}
+.red:active {
+    background-color: white;
+}
+
+    .red:active:after {
+        background-color: red;
+    }
