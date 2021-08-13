@@ -2,23 +2,47 @@
 @inject AppState AppState
 
 <div class="main">
-    <Red />
-    <Blue />
+    <input placeholder="Add task" @bind=" _todoItemText" @onkeyup="KeyboardEventHandler"/>
+    <button @onclick="AddTodo"> +</button>
+
+    
+    @foreach (var item in _items)
+    {
+        <ul>
+            <li>
+                <TodoItem Model="item"></TodoItem>
+            </li>
+        </ul>
+    }
+
 </div>
 
-<style >
-    * {
-        background-color: @AppState.BackgroundColor;
 
-      }
-</style>
 
 
 @code {
-    // test comment
+
+    private List<TodoItemModel> _items;
+    private string _todoItemText;
+
+    private void AddTodo()
+    {
+        _items.Add(new TodoItemModel(_todoItemText));
+        _todoItemText = "";
+    }
+
+    private void KeyboardEventHandler(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+            AddTodo();
+    }
+
     protected override void OnInitialized()
     {
-        AppState.OnBackgroundColorChange += (sender, args) => StateHasChanged();
+        _items = new List<TodoItemModel>();
+        AppState.StateChange += ((sender, item) => StateHasChanged());
     }
 
 }
+
+

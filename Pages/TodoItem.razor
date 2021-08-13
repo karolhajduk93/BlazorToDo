@@ -1,0 +1,7 @@
+﻿@using BlazorToDoApp.Models
+<div >@Model.Name</div><br/>
+
+@code {
+    [Parameter]
+    public TodoItemModel Model { get; set; }
+}

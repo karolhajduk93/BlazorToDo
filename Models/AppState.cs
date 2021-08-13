@@ -4,17 +4,13 @@ namespace BlazorToDoApp.Models
 {
     public class AppState 
     {
-        public string BackgroundColor { get; private set; }
+        //state value
 
-        public event EventHandler OnBackgroundColorChange = delegate {};
+        public event EventHandler<TodoItemModel> StateChange = delegate {};
 
-        public void BackgroundColorChange(string backgroundColor)
+        protected virtual void OnStateChange(TodoItemModel e)
         {
-            BackgroundColor = backgroundColor;
-            OnBackgroundColorChange(this , EventArgs.Empty);
-   
+            StateChange(this, e);
         }
-
-  
     }
 }

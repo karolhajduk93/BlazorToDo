@@ -6,3 +6,21 @@
 
     height: 100%;
 }
+
+
+
+::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    color: lightgrey;
+}
+
+::-moz-placeholder { /* Firefox 19+ */
+    color: lightgrey;
+}
+
+:-ms-input-placeholder { /* IE 10+ */
+    color: lightgrey;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+    color: lightgrey;
+}

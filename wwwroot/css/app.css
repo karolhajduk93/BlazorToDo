@@ -1,9 +1,9 @@
 ﻿
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: "Segoe","Segoe UI","Arial","sans-serif";
     position: relative;
-    background-color: black;
+    color: rgb(52, 55, 61);
     margin: 0;
 }
 #app {
