@@ -1,0 +1,14 @@
+﻿
+.item
+{
+    padding: 2px;
+    display: flex;
+    word-wrap: break-word;
+    word-break: break-word;
+    border-bottom: solid 0.5px lightgrey;
+}
+
+.checkbox {
+    border-radius: 50%;
+    padding-right: 10px !important;
+}

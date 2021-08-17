@@ -1,7 +1,11 @@
 ﻿@using BlazorToDoApp.Models
-<div >@Model.Name</div><br/>
+<div class="item">
+    <input class="checkbox" type="checkbox"/> 
+    @Model.Name
+</div><br/>
 
 @code {
     [Parameter]
     public TodoItemModel Model { get; set; }
+    //checkbox needs to be round and is to close to text
 }

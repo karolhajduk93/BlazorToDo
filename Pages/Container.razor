@@ -1,34 +1,32 @@
 ﻿@using BlazorToDoApp.Models
 @inject AppState AppState
 
-<div class="main">
-    <input placeholder="Add task" @bind=" _todoItemText" @onkeyup="KeyboardEventHandler"/>
-    <button @onclick="AddTodo"> +</button>
-
-    
-    @foreach (var item in _items)
-    {
-        <ul>
-            <li>
-                <TodoItem Model="item"></TodoItem>
-            </li>
-        </ul>
-    }
-
+<div class="add_task_block">
+    <button class="add" @onclick="AddTodo"> +</button>
+    <input class="input" maxlength="255" placeholder="Add a task" @bind="_todoItemText" @onkeyup="KeyboardEventHandler" />
 </div>
 
+
+
+<div class="list">
+    @foreach (var item in _items)
+    {
+        <TodoItem Model="item"></TodoItem>
+    }
+</div>
 
 
 
 @code {
 
     private List<TodoItemModel> _items;
-    private string _todoItemText;
+    private string _todoItemText = string.Empty;
 
     private void AddTodo()
     {
+        if (_todoItemText == string.Empty) return;
         _items.Add(new TodoItemModel(_todoItemText));
-        _todoItemText = "";
+        _todoItemText = string.Empty;
     }
 
     private void KeyboardEventHandler(KeyboardEventArgs args)
