@@ -1,6 +1,16 @@
-﻿body {
+﻿
+
+body {
     width: 70%;
+    height: 100%;
     max-width: 900px;
+    overflow-y: hidden;
+}
+
+.container {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
 }
 
 .add_task_block {
@@ -8,13 +18,12 @@
     justify-content: center;
     width: 100%;
     margin-top: 15px;
-    
 }
 
 .input {
     padding: 0 20px 0 20px;
     width: 70%;
-    max-width: 900px;
+    max-width: 870px;
     height: 30px;
     margin: 5px;
     -ms-border-radius: 20px;
@@ -36,16 +45,17 @@
 
 .list {
     border-left: solid 1px lightgrey;
-    width: 70%;
-    max-width: 900px;
-    height: 85vh;
-    scroll-behavior: ;
+    border-right: solid 1px lightgrey;
+    max-width: 915px;
+    height: 100%;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    margin: auto;
+    margin: 10px auto 0;
     width: 70%;
     padding: 10px;
+    position: relative;
+    left: 7px;
 }
 
 
