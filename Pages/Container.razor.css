@@ -42,10 +42,13 @@ body {
     color: grey;
     font-size: 35px;
 }
+    .add:active {
+        transform: scale(0.75);
+        color: darkgray;
+    }
 
 .list {
     border-left: solid 1px lightgrey;
-    border-right: solid 1px lightgrey;
     max-width: 915px;
     height: 100%;
     overflow-y: auto;
@@ -56,11 +59,16 @@ body {
     padding: 10px;
     position: relative;
     left: 7px;
+
 }
 
+::-webkit-scrollbar {
+    width: 10px;
+}
 
-::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-    color: lightgrey;
+::-webkit-scrollbar-thumb {
+    background: lightgrey;
+    border-radius: 20px;
 }
 
 ::-moz-placeholder { /* Firefox 19+ */

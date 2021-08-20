@@ -9,6 +9,33 @@
 }
 
 .checkbox {
- 
- --todo
+    visibility: hidden;
+    width: 0;
 }
+
+.checkbox-label {
+    margin-right: 10px;
+    border: 1px solid grey;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+
+
+.checkbox:checked + .checkbox-label {
+    background-color: #5687bf;
+}
+
+.check-sign {
+    width: 10px;
+    height: 5px;
+    border: 3px solid #f5f2ed;
+    transform: rotate(-45deg);
+    border-right: none;
+    border-top: none;
+    position: relative;
+    right: -4px;
+    top: 5px;
+}
+

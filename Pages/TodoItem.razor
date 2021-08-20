@@ -1,10 +1,15 @@
 ﻿@using BlazorToDoApp.Models
 <div class="item">
-    <input class="checkbox" type="checkbox"/> 
+    <input type="checkbox" class="checkbox" id="@Model.Id" @bind=@Model.Checked/>
+    <label for="@Model.Id" class="checkbox-label" onclick="() => @Model.Checked = !@Model.Checked">
+        <div class="check-sign"></div>
+    </label>
     @Model.Name
 </div><br/>
 
 @code {
     [Parameter]
     public TodoItemModel Model { get; set; }
+
+ 
 }

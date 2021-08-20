@@ -27,7 +27,7 @@
     private void AddTodo()
     {
         if (_todoItemText == string.Empty) return;
-        _items.Add(new TodoItemModel(_todoItemText));
+        _items.Insert(0, new TodoItemModel(_todoItemText));
         _todoItemText = string.Empty;
     }
 
