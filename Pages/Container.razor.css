@@ -62,6 +62,35 @@ body {
 
 }
 
+.completed {
+    color: #5687bf;
+    font-size: 1.3em;
+    margin: 8px;
+
+    display: flex;
+    align-items: center;
+}
+.number {
+    color: grey;
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-left: 10px;
+}
+.dropdown-completed {
+    border: none;
+    background: transparent;
+}
+.dropdown-sign {
+    width: 10px;
+    height: 8px;
+    border: 3px solid grey;
+    transform: rotate( -45deg);
+    border-right: none;
+    border-top: none;
+    right: -4px;
+    top: 5px;
+}
+
 ::-webkit-scrollbar {
     width: 10px;
 }

@@ -23,7 +23,12 @@
 
 
 
-.checkbox:checked + .checkbox-label {
+.checkbox-label-checked {
+    margin-right: 10px;
+    border: 1px solid grey;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
     background-color: #5687bf;
 }
 

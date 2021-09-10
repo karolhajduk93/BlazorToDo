@@ -6,11 +6,12 @@ namespace BlazorToDoApp.Models
     {
         //state value
 
-        public event EventHandler<TodoItemModel> StateChange = delegate {};
+        public event EventHandler StateChange = delegate {};
 
-        protected virtual void OnStateChange(TodoItemModel e)
+        public void OnStateChange()
         {
-            StateChange(this, e);
+            StateChange(this, EventArgs.Empty);
+
         }
     }
 }

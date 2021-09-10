@@ -7,14 +7,32 @@
         <input class="input" maxlength="255" placeholder="Add a task" @bind="_todoItemText" @onkeyup="KeyboardEventHandler" />
     </div>
 
-
-
     <div class="list">
-        @foreach (var item in _items)
+
+        @foreach (var item in _items.Where(item => !item.Checked))
         {
-            <TodoItem Model="item"></TodoItem>
+            <TodoItem Model="item" UpdateHappened="(_ => StateHasChanged())"></TodoItem>
+        }
+
+        @if(_items.Count(item => item.Checked) > 0)
+        {
+            <div class="completed">
+                <button class="dropdown-completed">
+                    <div class="dropdown-sign"></div>
+                </button>
+                Completed
+                <span class="number">@_items.Count(item => item.Checked)</span>
+            </div>
+        }
+
+        @foreach (var item in _items.Where(item => item.Checked))
+        {
+            <TodoItem Model="item" UpdateHappened="(_ => StateHasChanged())"></TodoItem>
         }
     </div>
+    
+
+    }
 </div>
 
 
@@ -22,7 +40,9 @@
 @code {
 
     private List<TodoItemModel> _items;
+    private TodoItem myItem;
     private string _todoItemText = string.Empty;
+    
 
     private void AddTodo()
     {
@@ -35,6 +55,7 @@
     {
         if (args.Key == "Enter")
             AddTodo();
+
     }
 
     protected override void OnInitialized()

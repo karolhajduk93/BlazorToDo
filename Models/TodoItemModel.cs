@@ -2,18 +2,18 @@
 {
     public class TodoItemModel
     {
-        public string Name { get; set; }
+        public string Text { get; set; }
         public int Id { get; set; }
 
-        public bool Checked { get; set; } = false;
+        public bool Checked { get; set; } 
 
         private static int  _idIncrementer = 0;
 
         public TodoItemModel() { }
 
-        public TodoItemModel(string name)
+        public TodoItemModel(string text)
         {
-            Name = name;
+            Text = text;
             Id = _idIncrementer++;
         }
     }

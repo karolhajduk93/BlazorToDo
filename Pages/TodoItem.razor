@@ -1,15 +1,33 @@
 ﻿@using BlazorToDoApp.Models
+@inject AppState AppState
+
 <div class="item">
-    <input type="checkbox" class="checkbox" id="@Model.Id" @bind=@Model.Checked/>
-    <label for="@Model.Id" class="checkbox-label" onclick="() => @Model.Checked = !@Model.Checked">
+       
+    <input type="checkbox" class="checkbox" id="@Model.Id" @onchange="Foo" />
+    <label for="@Model.Id" class="@(Model.Checked ? "checkbox-label-checked" : "checkbox-label")">
         <div class="check-sign"></div>
     </label>
-    @Model.Name
-</div><br/>
+    @Model.Text
+</div>
+
+<br />
 
 @code {
     [Parameter]
     public TodoItemModel Model { get; set; }
 
- 
+
+    [Parameter]
+    public EventCallback<bool> UpdateHappened {get; set; }
+
+    private void Foo()
+    {
+        Model.Checked = !Model.Checked;
+
+        Console.WriteLine("---" + Model.Checked + "---" + Model.Id);
+
+        UpdateHappened.InvokeAsync(false);
+        StateHasChanged();
+    }
+
 }
