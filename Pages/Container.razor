@@ -1,53 +1,91 @@
 ﻿@using BlazorToDoApp.Models
 @inject AppState AppState
+@inject ISyncLocalStorageService localStorage
 
-<div class =" container">
+<div class=" container">
     <div class="add_task_block">
         <button class="add" @onclick="AddTodo"> +</button>
         <input class="input" maxlength="255" placeholder="Add a task" @bind="_todoItemText" @onkeyup="KeyboardEventHandler" />
     </div>
 
     <div class="list">
-
-        @foreach (var item in _items.Where(item => !item.Checked))
+        @if (_itemsToDo.Any())
         {
-            <TodoItem Model="item" UpdateHappened="(_ => StateHasChanged())"></TodoItem>
+            @foreach (var item in _itemsToDo.Where(item => !item.Checked))
+            {
+                <TodoItem Model="item" UpdateHappened="RerenderForUpdate"></TodoItem>
+            }
         }
-
-        @if(_items.Count(item => item.Checked) > 0)
+        @if (_itemsDone.Any())
         {
             <div class="completed">
-                <button class="dropdown-completed">
-                    <div class="dropdown-sign"></div>
+                <button class="dropdown-completed" id="dropdown-button" @onclick="HideCompletedTasks">
+                    <div class=@_dropdownCompletedSign></div>
                 </button>
-                Completed
-                <span class="number">@_items.Count(item => item.Checked)</span>
+                <label for="dropdown-button">Completed</label>
+                <span class="number">@_itemsDone.Count</span>
             </div>
         }
+        <div class="@_completedContainer">
+            @foreach (var item in _itemsDone)
+            {
+                <TodoItem Model="item" UpdateHappened="RerenderForUpdate"></TodoItem>
+            }
+        </div>
 
-        @foreach (var item in _items.Where(item => item.Checked))
-        {
-            <TodoItem Model="item" UpdateHappened="(_ => StateHasChanged())"></TodoItem>
-        }
     </div>
-    
-
-    }
 </div>
 
 
 
 @code {
 
-    private List<TodoItemModel> _items;
-    private TodoItem myItem;
+    private List<TodoItemModel> _itemsToDo;
+    private List<TodoItemModel> _itemsDone;
     private string _todoItemText = string.Empty;
-    
+    private bool _completedVisible = true;
+    private string _dropdownCompletedSign = "dropdown-sign-visible";
+    private string _completedContainer = "completed-container-show";
+
+
+    private void RerenderForUpdate(Tuple<TodoItemModel, string> update)
+    {
+        switch (update.Item2)
+        {
+            case "remove":
+                _itemsToDo.Remove(update.Item1);
+                _itemsDone.Remove(update.Item1);
+                break;
+            case "toggle" when update.Item1.Checked:
+                _itemsToDo.Remove(update.Item1);
+                _itemsDone.Add(update.Item1);
+                break;
+            case "toggle":
+                _itemsToDo.Add(update.Item1);
+                _itemsDone.Remove(update.Item1);
+                break;
+        }
+
+        var indexTodo = (_itemsToDo.Count > 0) ? _itemsToDo.Last().Id + 1 : 0;
+        var indexDone = (_itemsDone.Count > 0) ? _itemsDone.Last().IdCompleted + 1 : 0;
+
+        UpdateLocalStorage("indexToDo", indexTodo);
+        UpdateLocalStorage("indexDone", indexDone);
+        UpdateLocalStorage("itemsToDo", _itemsToDo);
+        UpdateLocalStorage("itemsDone", _itemsDone);
+
+    }
 
     private void AddTodo()
     {
         if (_todoItemText == string.Empty) return;
-        _items.Insert(0, new TodoItemModel(_todoItemText));
+
+        _itemsToDo.Add(new TodoItemModel(_todoItemText));
+        var indexTodo = (_itemsToDo.Count > 0) ? _itemsToDo.Last().Id + 1 : 0;
+
+        UpdateLocalStorage("itemsToDo", _itemsToDo);
+        UpdateLocalStorage("indexToDo", indexTodo);
+
         _todoItemText = string.Empty;
     }
 
@@ -55,13 +93,35 @@
     {
         if (args.Key == "Enter")
             AddTodo();
-
     }
+
+    private void HideCompletedTasks()
+    {
+        _completedVisible = !_completedVisible;
+        _dropdownCompletedSign = _completedVisible ? "dropdown-sign-visible" : "dropdown-sign-hidden";
+        _completedContainer = _completedVisible ? "completed-container-show" : "completed-container-hide";
+    }
+
+    public void UpdateLocalStorage(string key, List<TodoItemModel> list)
+    {
+        localStorage.SetItem(key, list);
+    }
+
+    public void UpdateLocalStorage(string key, int id)
+    {
+        localStorage.SetItem(key, id);
+    }
+
 
     protected override void OnInitialized()
     {
-        _items = new List<TodoItemModel>();
-        AppState.StateChange += ((sender, item) => StateHasChanged());
+        _itemsToDo = localStorage.GetItem<List<TodoItemModel>>("itemsToDo") ?? new List<TodoItemModel>();
+        _itemsDone = localStorage.GetItem<List<TodoItemModel>>("itemsDone") ?? new List<TodoItemModel>();
+
+        TodoItemModel.IdIncrementer = (_itemsToDo.Count > 0) ? (_itemsToDo.Last().Id + 1) : 0;
+        TodoItemModel.IdCompletedIncrementer = (_itemsDone.Count > 0) ? (_itemsDone.Last().IdCompleted + 1) : 0;
+
+        StateHasChanged();
     }
 
 }

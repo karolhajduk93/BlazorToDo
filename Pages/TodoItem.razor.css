@@ -1,12 +1,15 @@
 ﻿
-.item
-{
-    padding: 2px;
+.item {
+    position: relative;
+    padding: 0 5px;
     display: flex;
     word-wrap: break-word;
     word-break: break-word;
+    border: 0;
     border-bottom: solid 0.5px lightgrey;
+    align-items: center;
 }
+
 
 .checkbox {
     visibility: hidden;
@@ -16,12 +19,15 @@
 .checkbox-label {
     margin-right: 10px;
     border: 1px solid grey;
-    width: 20px;
-    height: 20px;
+    width: 20px !important;
+    height: 20px !important;
     border-radius: 50%;
+    flex: 0 0 20px;
+    cursor: pointer;
+
+    animation-name: checked-animation;
+    animation-duration: 0.5s;
 }
-
-
 
 .checkbox-label-checked {
     margin-right: 10px;
@@ -30,6 +36,11 @@
     height: 20px;
     border-radius: 50%;
     background-color: #5687bf;
+    flex: 0 0 20px;
+    cursor: pointer;
+
+    animation-name: checked-animation;
+    animation-duration: 0.5s;
 }
 
 .check-sign {
@@ -44,3 +55,52 @@
     top: 5px;
 }
 
+.date {
+    position: absolute;
+    bottom: 0;
+    left: 90%;
+    transform: translate(-50%, 50%);
+    backface-visibility: hidden;
+    background-color: #f5f2ed;
+    padding: 10px 5px;
+    border: none;
+    font-size: 13px;
+    min-width: 53px;
+    color: #5687bf;
+}
+
+.todo-item-text {
+    width: 88%;
+    z-index: 1;
+}
+
+.delete-button {
+    left: 93%;
+    z-index: 1;
+    display: block;
+    min-width: 25px;
+    min-height: 25px;
+    background-color: #f5f2ed;
+    background-image: url(/images/delete-image2.png);
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
+    margin: 5px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    cursor: pointer;
+}
+
+    .delete-button:active {
+            transform: scale(0.75);
+    }
+
+.animate {
+
+}
+
+@keyframes checked-animation {
+    from { transform: scale(0.0); }
+
+    to { transform: scale(1.0); }
+}

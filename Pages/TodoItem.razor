@@ -1,14 +1,15 @@
 ﻿@using BlazorToDoApp.Models
 @inject AppState AppState
 
-<div class="item">
-       
-    <input type="checkbox" class="checkbox" id="@Model.Id" @onchange="Foo" />
+<fieldset class="item">
+    <input type="checkbox" class="checkbox" id="@Model.Id" @onchange="ToggleCheckbox" />
     <label for="@Model.Id" class="@(Model.Checked ? "checkbox-label-checked" : "checkbox-label")">
         <div class="check-sign"></div>
     </label>
-    @Model.Text
-</div>
+    <div class="todo-item-text"> @Model.Text</div>
+    <button class="delete-button" @onclick="RemoveTodoItem"></button>
+    <legend class="date">@Model.Date</legend>
+</fieldset>
 
 <br />
 
@@ -16,17 +17,20 @@
     [Parameter]
     public TodoItemModel Model { get; set; }
 
-
     [Parameter]
-    public EventCallback<bool> UpdateHappened {get; set; }
+    public EventCallback<Tuple<TodoItemModel, string>> UpdateHappened { get; set; }
 
-    private void Foo()
+    private void ToggleCheckbox()
     {
         Model.Checked = !Model.Checked;
+        Model.IdCompleted = Model.Checked ? TodoItemModel.IdCompletedIncrementer++ : -1;
+        UpdateHappened.InvokeAsync(new Tuple<TodoItemModel, string>(Model, "toggle"));
+        StateHasChanged();
+    }
 
-        Console.WriteLine("---" + Model.Checked + "---" + Model.Id);
-
-        UpdateHappened.InvokeAsync(false);
+    private void RemoveTodoItem()
+    {
+        UpdateHappened.InvokeAsync(new Tuple<TodoItemModel, string>(Model, "remove"));
         StateHasChanged();
     }
 
