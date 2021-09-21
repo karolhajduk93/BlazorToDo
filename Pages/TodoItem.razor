@@ -3,11 +3,11 @@
 
 <fieldset class="item">
     <input type="checkbox" class="checkbox" id="@Model.Id" @onchange="ToggleCheckbox" />
-    <label for="@Model.Id" class="@(Model.Checked ? "checkbox-label-checked" : "checkbox-label")">
+    <label title="@(Model.Checked ? "Mark as not completed" : "Mark as completed")" for="@Model.Id" class="@(Model.Checked ? "checkbox-label-checked" : "checkbox-label")">
         <div class="check-sign"></div>
     </label>
-    <div class="todo-item-text"> @Model.Text</div>
-    <button class="delete-button" @onclick="RemoveTodoItem"></button>
+    <div class="@(Model.Checked ? "todo-item-text-crossed" : "todo-item-text")"> @Model.Text</div>
+    <button title="Delete task" class="delete-button" @onclick="RemoveTodoItem"></button>
     <legend class="date">@Model.Date</legend>
 </fieldset>
 

@@ -8,6 +8,8 @@
     border: 0;
     border-bottom: solid 0.5px lightgrey;
     align-items: center;
+    min-width: 270px;
+
 }
 
 
@@ -72,6 +74,13 @@
 .todo-item-text {
     width: 88%;
     z-index: 1;
+    
+}
+.todo-item-text-crossed {
+    width: 88%;
+    z-index: 1;
+    text-decoration: line-through;
+    color: darkgrey;
 }
 
 .delete-button {
@@ -89,10 +98,15 @@
     height: 32px;
     border: none;
     cursor: pointer;
+    filter: grayscale(1);
 }
 
     .delete-button:active {
             transform: scale(0.75);
+    }
+    
+    .delete-button:hover {
+        filter: grayscale(0);
     }
 
 .animate {
