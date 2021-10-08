@@ -3,14 +3,19 @@
 @inject ISyncLocalStorageService localStorage
 
 <div class=" container">
-    
-    <h2 class="container-title">
-        My Day <br/>
-        <div class="title-date">@DateTime.Now.ToString("dddd, MMMM yyyy")</div>
-    </h2>
+    <div class="upper-section">
+        <h2 class="upper-section-title">
+            My Day <br />
+            <div class="title-date">@DateTime.Now.ToString("dddd, MMMM yyyy")</div>
+        </h2>
+        <div class="login-save-group">
+            <button class="save-button"></button>
+            <button class="login-button"></button>
+        </div>
+    </div>
     <div class="add_task_block">
         <button title="Add a task" class="add" @onclick="AddTodo"> +</button>
-        <input class="input" maxlength="255" placeholder="Add a task" @bind="_todoItemText" @onkeyup="KeyboardEventHandler"/>
+        <input class="input" maxlength="255" placeholder="Add a task" @bind="_todoItemText" @onkeyup="KeyboardEventHandler" />
     </div>
 
     <div class="list">
