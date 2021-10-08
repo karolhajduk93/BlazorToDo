@@ -6,9 +6,13 @@
     max-width: 915px;
     margin: 10px auto 0;
     word-break: keep-all;
+
+    font-size: 20px;
+    font-weight: bold;
 }
 .title-date {
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: bold;
     font-style: italic;
     color: #5687bf;
 }

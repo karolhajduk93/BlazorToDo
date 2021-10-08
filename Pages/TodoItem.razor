@@ -1,15 +1,18 @@
 ﻿@using BlazorToDoApp.Models
 @inject AppState AppState
+@inject IJSRuntime JsRuntime
 
 <fieldset class="item">
     <input type="checkbox" class="checkbox" id="@Model.Id" @onchange="ToggleCheckbox" />
     <label title="@(Model.Checked ? "Mark as not completed" : "Mark as completed")" for="@Model.Id" class="@(Model.Checked ? "checkbox-label-checked" : "checkbox-label")">
-        <div class="check-sign"></div>
+        <span class="check-sign"></span>
     </label>
-    <div class="@(Model.Checked ? "todo-item-text-crossed" : "todo-item-text")"> @Model.Text</div>
+    <textarea maxlength="255" id=@_dynamicId class="@(Model.Checked ? "todo-item-text-crossed" : "todo-item-text")"  @oninput="EditTaskText" onkeypress="return event.keyCode!=13">@Model.Text</textarea>
     <button title="Delete task" class="delete-button" @onclick="RemoveTodoItem"></button>
     <legend class="date">@Model.Date</legend>
 </fieldset>
+
+
 
 <br />
 
@@ -19,6 +22,8 @@
 
     [Parameter]
     public EventCallback<Tuple<TodoItemModel, string>> UpdateHappened { get; set; }
+
+    private string _dynamicId = string.Empty;
 
     private void ToggleCheckbox()
     {
@@ -32,6 +37,36 @@
     {
         UpdateHappened.InvokeAsync(new Tuple<TodoItemModel, string>(Model, "remove"));
         StateHasChanged();
+    }
+
+    private void ReplaceEnter()
+    {
+        Console.WriteLine("paste worked. args= ");
+    }
+
+    async Task EditTaskText(ChangeEventArgs args)
+    {
+        var text = args.Value.ToString();
+
+        await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.Id}");
+        Model.Text = text;
+
+        await UpdateHappened.InvokeAsync(new Tuple<TodoItemModel, string>(Model, ""));
+        StateHasChanged();
+
+        if (text == string.Empty)
+            RemoveTodoItem();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+            await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.Id}");
+    }
+
+    protected override void OnInitialized()
+    {
+        _dynamicId = ("Text" + Model.Id);
     }
 
 }
