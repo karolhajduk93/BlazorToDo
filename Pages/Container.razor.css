@@ -46,7 +46,6 @@
     border: none;
     cursor: pointer;
     border-radius: 50%;
-    /*    filter: grayscale(1);*/
 }
 
 .save-button {
@@ -63,14 +62,26 @@
     border: none;
     cursor: pointer;
     border-radius: 50%;
-    /*filter: grayscale(1);*/
 }
 
-button:active {
+.save-button-hidden {
+    display: none;
+}
+
+
+.save-button:active {
     transform: scale(0.75);
 }
 
-button:hover {
+.save-button:hover {
+    background-color: #5687bf;
+}
+
+.login-button:active {
+    transform: scale(0.75);
+}
+
+.login-button:hover {
     background-color: #5687bf;
 }
 
@@ -153,6 +164,7 @@ button:hover {
     top: 5px;
 }
 
+
 .dropdown-sign-hidden {
   
     width: 8px;
@@ -165,6 +177,7 @@ button:hover {
     right: -4px;
     top: 5px;
 }
+
 
 .completed-container-show {
     opacity: 1;

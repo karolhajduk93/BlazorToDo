@@ -9,7 +9,7 @@
             <div class="title-date">@DateTime.Now.ToString("dddd, MMMM yyyy")</div>
         </h2>
         <div class="login-save-group">
-            <button class="save-button"></button>
+            <button class="@_saveButton"></button>
             <button class="login-button"></button>
         </div>
     </div>
@@ -19,17 +19,16 @@
     </div>
 
     <div class="list">
-        @if (_itemsToDo.Any())
+       
+        @foreach (var item in _itemsToDo.Where(item => !item.Checked))
         {
-            @foreach (var item in _itemsToDo.Where(item => !item.Checked))
-            {
-                <TodoItem Model="item" UpdateHappened="RerenderForUpdate"></TodoItem>
-            }
+            <TodoItem @key="@item.Id" Model="@item" UpdateHappened="RerenderForUpdate"></TodoItem>
         }
+        
         @if (_itemsDone.Any())
         {
             <div class="completed">
-                <button class="dropdown-completed" id="dropdown-button" @onclick="HideCompletedTasks">
+                <button class="dropdown-completed" id="dropdown-button" @onclick="HideShowCompletedTasks">
                     <div class=@_dropdownCompletedSign></div>
                 </button>
                 <label for="dropdown-button">Completed</label>
@@ -39,7 +38,7 @@
         <div class="@_completedContainer">
             @foreach (var item in _itemsDone)
             {
-                <TodoItem Model="item" UpdateHappened="RerenderForUpdate"></TodoItem>
+                <TodoItem Model="@item" UpdateHappened="RerenderForUpdate"></TodoItem>
             }
         </div>
 
@@ -56,6 +55,7 @@
     private bool _completedVisible = true;
     private string _dropdownCompletedSign = "dropdown-sign-visible";
     private string _completedContainer = "completed-container-show";
+    private string _saveButton = "save-button-hidden";
 
 
     private void RerenderForUpdate(Tuple<TodoItemModel, string> update)
@@ -84,6 +84,7 @@
         UpdateLocalStorage("itemsToDo", _itemsToDo);
         UpdateLocalStorage("itemsDone", _itemsDone);
 
+        StateHasChanged();
     }
 
     private void AddTodo()
@@ -105,7 +106,12 @@
             AddTodo();
     }
 
-    private void HideCompletedTasks()
+    private void EnableSaveList()
+    {
+        _saveButton = "save-button-hidden";
+    }
+
+    private void HideShowCompletedTasks()
     {
         _completedVisible = !_completedVisible;
         _dropdownCompletedSign = _completedVisible ? "dropdown-sign-visible" : "dropdown-sign-hidden";
