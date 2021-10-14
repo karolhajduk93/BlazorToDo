@@ -9,8 +9,8 @@
             <div class="title-date">@DateTime.Now.ToString("dddd, MMMM yyyy")</div>
         </h2>
         <div class="login-save-group">
-            <button class="@_saveButton"></button>
-            <button class="login-button"></button>
+            <button title="Save this list" class="@_saveButton"></button>
+            <button title="Login" class="login-button"></button>
         </div>
     </div>
     <div class="add_task_block">
@@ -38,7 +38,7 @@
         <div class="@_completedContainer">
             @foreach (var item in _itemsDone)
             {
-                <TodoItem Model="@item" UpdateHappened="RerenderForUpdate"></TodoItem>
+                <TodoItem @key="@item.Id" Model="@item" UpdateHappened="RerenderForUpdate"></TodoItem>
             }
         </div>
 
@@ -76,11 +76,6 @@
                 break;
         }
 
-        var indexTodo = (_itemsToDo.Count > 0) ? _itemsToDo.Last().Id + 1 : 0;
-        var indexDone = (_itemsDone.Count > 0) ? _itemsDone.Last().IdCompleted + 1 : 0;
-
-        UpdateLocalStorage("indexToDo", indexTodo);
-        UpdateLocalStorage("indexDone", indexDone);
         UpdateLocalStorage("itemsToDo", _itemsToDo);
         UpdateLocalStorage("itemsDone", _itemsDone);
 
@@ -92,11 +87,7 @@
         if (_todoItemText == string.Empty) return;
 
         _itemsToDo.Add(new TodoItemModel(_todoItemText));
-        var indexTodo = (_itemsToDo.Count > 0) ? _itemsToDo.Last().Id + 1 : 0;
-
         UpdateLocalStorage("itemsToDo", _itemsToDo);
-        UpdateLocalStorage("indexToDo", indexTodo);
-
         _todoItemText = string.Empty;
     }
 
@@ -123,19 +114,10 @@
         localStorage.SetItem(key, list);
     }
 
-    public void UpdateLocalStorage(string key, int id)
-    {
-        localStorage.SetItem(key, id);
-    }
-
-
     protected override void OnInitialized()
     {
         _itemsToDo = localStorage.GetItem<List<TodoItemModel>>("itemsToDo") ?? new List<TodoItemModel>();
         _itemsDone = localStorage.GetItem<List<TodoItemModel>>("itemsDone") ?? new List<TodoItemModel>();
-
-        TodoItemModel.IdIncrementer = (_itemsToDo.Count > 0) ? (_itemsToDo.Last().Id + 1) : 0;
-        TodoItemModel.IdCompletedIncrementer = (_itemsDone.Count > 0) ? (_itemsDone.Last().IdCompleted + 1) : 0;
 
         StateHasChanged();
     }

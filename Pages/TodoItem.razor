@@ -7,7 +7,7 @@
     <label title="@(Model.Checked ? "Mark as not completed" : "Mark as completed")" for="@Model.Id" class="@(Model.Checked ? "checkbox-label-checked" : "checkbox-label")">
         <span class="check-sign"></span>
     </label>
-    <textarea maxlength="255" id=@_dynamicId class="@(Model.Checked ? "todo-item-text-crossed" : "todo-item-text")" @oninput="EditTaskText" onkeypress="return event.keyCode!=13" @bind=@Model.Text>@Model.Text</textarea>
+    <textarea maxlength="255" id=@_dynamicId class="@(Model.Checked ? "todo-item-text-crossed" : "todo-item-text")" @oninput="EditTaskText" onkeypress="return event.keyCode!=13" onresize="window.methods.test(event)" onload="window.methods.test" @bind=@Model.Text>@Model.Text</textarea>
     <button title="Delete task" class="delete-button" @onclick="RemoveTodoItem"></button>
     <legend class="date">@Model.Date</legend>
 </fieldset>
@@ -25,10 +25,17 @@
 
     private string _dynamicId = string.Empty;
 
+    public static event Func<Task> OnResize;
+
+    [JSInvokable]
+    public static async void ResizedWindow()
+    {
+        await OnResize?.Invoke();
+    }
+
     private void ToggleCheckbox()
     {
         Model.Checked = !Model.Checked;
-        Model.IdCompleted = Model.Checked ? TodoItemModel.IdCompletedIncrementer++ : -1;
         UpdateHappened.InvokeAsync(new Tuple<TodoItemModel, string>(Model, "toggle"));
         StateHasChanged();
     }
@@ -54,12 +61,23 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
+        if (firstRender)
+        {
             await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.Id}");
+            await JsRuntime.InvokeVoidAsync("methods.onLoad");
+        }
+    }
+
+    private async Task BrowserHasResized()
+    {
+        await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.Id}");
+
+        StateHasChanged();
     }
 
     protected override void OnInitialized()
     {
+        OnResize += BrowserHasResized;
         _dynamicId = ("Text" + Model.Id);
     }
 }
