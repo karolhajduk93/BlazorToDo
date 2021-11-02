@@ -1,5 +1,4 @@
 ﻿@using BlazorToDoApp.Models
-@inject AppState AppState
 @inject IJSRuntime JsRuntime
 
 <fieldset class="item">
@@ -17,6 +16,7 @@
 <br />
 
 @code {
+
     [Parameter]
     public TodoItemModel Model { get; set; }
 
@@ -37,13 +37,11 @@
     {
         Model.Checked = !Model.Checked;
         UpdateHappened.InvokeAsync(new Tuple<TodoItemModel, string>(Model, "toggle"));
-        StateHasChanged();
     }
 
     private void RemoveTodoItem()
     {
         UpdateHappened.InvokeAsync(new Tuple<TodoItemModel, string>(Model, "remove"));
-        StateHasChanged();
     }
 
     async Task EditTaskText(ChangeEventArgs args)
@@ -53,7 +51,7 @@
 
         await UpdateHappened.InvokeAsync(new Tuple<TodoItemModel, string>(Model, ""));
 
-        await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.Id}");
+          await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.Id}");
 
         if (text == string.Empty)
             RemoveTodoItem();
@@ -63,16 +61,14 @@
     {
         if (firstRender)
         {
-            await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.Id}");
-            await JsRuntime.InvokeVoidAsync("methods.onLoad");
+                        await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.Id}");
+                await JsRuntime.InvokeVoidAsync("methods.onLoad");
         }
     }
 
     private async Task BrowserHasResized()
     {
         await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.Id}");
-
-        StateHasChanged();
     }
 
     protected override void OnInitialized()

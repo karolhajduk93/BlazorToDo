@@ -1,8 +1,7 @@
 ﻿@using BlazorToDoApp.Models
-@inject AppState AppState
 @inject ISyncLocalStorageService localStorage
 
-<div class=" container">
+<div class="container">
     <div class="upper-section">
         <h2 class="upper-section-title">
             My Day <br />
@@ -10,7 +9,7 @@
         </h2>
         <div class="login-save-group">
             <button title="Save this list" class="@_saveButton"></button>
-            <button title="Login" class="login-button"></button>
+            <button title="Log In" class="login-button"></button>
         </div>
     </div>
     <div class="add_task_block">
@@ -19,12 +18,12 @@
     </div>
 
     <div class="list">
-       
-        @foreach (var item in _itemsToDo.Where(item => !item.Checked))
+
+        @foreach (var item in _itemsToDo)
         {
             <TodoItem @key="@item.Id" Model="@item" UpdateHappened="RerenderForUpdate"></TodoItem>
         }
-        
+
         @if (_itemsDone.Any())
         {
             <div class="completed">
@@ -67,8 +66,8 @@
                 _itemsDone.Remove(update.Item1);
                 break;
             case "toggle" when update.Item1.Checked:
-                _itemsToDo.Remove(update.Item1);
                 _itemsDone.Add(update.Item1);
+                _itemsToDo.Remove(update.Item1);
                 break;
             case "toggle":
                 _itemsToDo.Add(update.Item1);
@@ -78,8 +77,6 @@
 
         UpdateLocalStorage("itemsToDo", _itemsToDo);
         UpdateLocalStorage("itemsDone", _itemsDone);
-
-        StateHasChanged();
     }
 
     private void AddTodo()

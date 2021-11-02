@@ -18,7 +18,6 @@ namespace BlazorToDoApp
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-            builder.Services.AddSingleton<AppState, AppState>();
             builder.Services.AddBlazoredLocalStorage();
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
