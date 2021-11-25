@@ -21,7 +21,7 @@
 
         @foreach (var item in _itemsToDo)
         {
-            <TodoItem @key="@item.Id" Model="@item" UpdateHappened="RerenderForUpdate"></TodoItem>
+            <TodoItem @key="@item.ToDoItemId" Model="@item" UpdateHappened="RerenderForUpdate"></TodoItem>
         }
 
         @if (_itemsDone.Any())
@@ -37,7 +37,7 @@
         <div class="@_completedContainer">
             @foreach (var item in _itemsDone)
             {
-                <TodoItem @key="@item.Id" Model="@item" UpdateHappened="RerenderForUpdate"></TodoItem>
+                <TodoItem @key="@item.ToDoItemId" Model="@item" UpdateHappened="RerenderForUpdate"></TodoItem>
             }
         </div>
 

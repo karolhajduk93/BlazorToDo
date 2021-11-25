@@ -2,8 +2,8 @@
 @inject IJSRuntime JsRuntime
 
 <fieldset class="item">
-    <input type="checkbox" class="checkbox" id="@Model.Id" @onchange="ToggleCheckbox" />
-    <label title="@(Model.Checked ? "Mark as not completed" : "Mark as completed")" for="@Model.Id" class="@(Model.Checked ? "checkbox-label-checked" : "checkbox-label")">
+    <input type="checkbox" class="checkbox" id="@Model.ToDoItemId" @onchange="ToggleCheckbox" />
+    <label title="@(Model.Checked ? "Mark as not completed" : "Mark as completed")" for="@Model.ToDoItemId" class="@(Model.Checked ? "checkbox-label-checked" : "checkbox-label")">
         <span class="check-sign"></span>
     </label>
     <textarea maxlength="255" id=@_dynamicId class="@(Model.Checked ? "todo-item-text-crossed" : "todo-item-text")" @oninput="EditTaskText" onkeypress="return event.keyCode!=13" onresize="window.methods.test(event)" onload="window.methods.test" @bind=@Model.Text>@Model.Text</textarea>
@@ -51,7 +51,7 @@
 
         await UpdateHappened.InvokeAsync(new Tuple<TodoItemModel, string>(Model, ""));
 
-          await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.Id}");
+          await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.ToDoItemId}");
 
         if (text == string.Empty)
             RemoveTodoItem();
@@ -61,19 +61,19 @@
     {
         if (firstRender)
         {
-                        await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.Id}");
+                        await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.ToDoItemId}");
                 await JsRuntime.InvokeVoidAsync("methods.onLoad");
         }
     }
 
     private async Task BrowserHasResized()
     {
-        await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.Id}");
+        await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.ToDoItemId}");
     }
 
     protected override void OnInitialized()
     {
         OnResize += BrowserHasResized;
-        _dynamicId = ("Text" + Model.Id);
+        _dynamicId = ("Text" + Model.ToDoItemId);
     }
 }
