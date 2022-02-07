@@ -190,3 +190,56 @@
     transition: opacity 0.3s linear;
     pointer-events: none;
 }
+
+.list-of-lists-visible {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    max-width: 15%;
+    width: 15%;
+    min-height: 250px;
+    min-width: 180px;
+    left: 12px;
+    top: 120px;
+}
+
+.list-of-lists-hidden {
+    display: none;
+}
+
+@media screen and (max-width: 1100px) {
+    .list-of-lists-visible {
+        display: none;
+    }
+}
+.login-incentive {
+        position: relative;
+        top: 12px;
+        color: white;
+        background-color: darkgray;
+        padding: 6px;
+    }
+
+.list-of-lists-title {
+    width: 100%;
+    border-bottom: solid 0.5px lightgrey;
+    color: black;
+    padding: 6px;
+}
+
+.list-of-lists-button {
+    min-width: 25px;
+    min-height: 25px;
+    padding: 0;
+    background-image: url(/images/menu_icon.jpg);
+    background-color: inherit;
+    background-repeat: no-repeat;
+    background-size: 30px 30px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    left: 12px;
+    top: 95px;
+}

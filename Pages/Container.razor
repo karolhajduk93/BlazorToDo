@@ -1,10 +1,13 @@
 ﻿@using BlazorToDoApp.Models
 @inject ISyncLocalStorageService localStorage
+@using System.Net.Http
+@using System.Runtime.Serialization
+@inject HttpClient Http
 
 <div class="container">
     <div class="upper-section">
         <h2 class="upper-section-title">
-            My Day <br />
+            @_toDoList.ListName <br />
             <div class="title-date">@DateTime.Now.ToString("dddd, MMMM yyyy")</div>
         </h2>
         <div class="login-save-group">
@@ -40,24 +43,68 @@
                 <TodoItem @key="@item.ToDoItemId" Model="@item" UpdateHappened="RerenderForUpdate"></TodoItem>
             }
         </div>
-
+        <button @onclick="SaveToApi">SaveToAPI</button>
     </div>
 </div>
+
+<button class="list-of-lists-button" @onclick="HideShowListOfLists"></button> @*on button clicked show even if screen is small*@
+<div class=@_listOfLists>
+    <div class="list-of-lists-title">Your lists</div>
+    @if (_loggedIn) @*authorizedviewhere instead of this if*@
+    {
+        //list of saved lists
+    }
+    else
+    {
+        <div class="login-incentive">You are not signed.<br/>Sign in to have access to all your lists from anywhere.</div>
+    }
+</div>
+
+
+
 
 
 
 @code {
 
-    private List<TodoItemModel> _itemsToDo;
-    private List<TodoItemModel> _itemsDone;
+    private List<ToDoItemModel> _itemsToDo;
+    private List<ToDoItemModel> _itemsDone;
+    private List<ToDoListModel> _toDoLists;
+    private ToDoListModel _toDoList;
+
     private string _todoItemText = string.Empty;
     private bool _completedVisible = true;
+    private bool _listOfListsVisible = true;
+    private bool _loggedIn = false;
+
     private string _dropdownCompletedSign = "dropdown-sign-visible";
     private string _completedContainer = "completed-container-show";
     private string _saveButton = "save-button-hidden";
+    private string _listOfLists = "list-of-lists-visible";
 
 
-    private void RerenderForUpdate(Tuple<TodoItemModel, string> update)
+    public async Task SaveToApi()
+    {
+        /*_toDoLists = await Http.GetFromJsonAsync<List<ToDoListModel>>("https://localhost:5003/api/ToDoList");
+        _toDoLists.ForEach(list => Console.WriteLine(list.ListName));
+        _toDoLists.ForEach(list => list.ToDoItems.ForEach(item => Console.WriteLine("{" + item.Text + "}")));*/
+        var x = new ToDoListModel()
+        {
+            ToDoItems =
+        {
+                new ToDoItemModel("Task 1") {Checked = true},
+                new ToDoItemModel("Task 2") {Checked = true},
+                new ToDoItemModel("Task 3"),
+                new ToDoItemModel("Task 4"),
+            }
+        };
+        Console.WriteLine("Here before tragedy.");
+        var y = await Http.PostAsJsonAsync("https://localhost:5003/api/ToDoList", x);
+
+        Console.WriteLine("==========" + x.Id);
+    }
+
+    private void RerenderForUpdate(Tuple<ToDoItemModel, string> update)
     {
         switch (update.Item2)
         {
@@ -83,8 +130,9 @@
     {
         if (_todoItemText == string.Empty) return;
 
-        _itemsToDo.Add(new TodoItemModel(_todoItemText));
+        _itemsToDo.Add(new ToDoItemModel(_todoItemText));
         UpdateLocalStorage("itemsToDo", _itemsToDo);
+
         _todoItemText = string.Empty;
     }
 
@@ -106,15 +154,23 @@
         _completedContainer = _completedVisible ? "completed-container-show" : "completed-container-hide";
     }
 
-    public void UpdateLocalStorage(string key, List<TodoItemModel> list)
+    private void HideShowListOfLists()
+    {
+        _listOfListsVisible = !_listOfListsVisible;
+        _listOfLists = _listOfListsVisible ? "list-of-lists-visible" : "list-of-lists-hidden";
+    }
+
+    public void UpdateLocalStorage(string key, List<ToDoItemModel> list)
     {
         localStorage.SetItem(key, list);
     }
 
     protected override void OnInitialized()
     {
-        _itemsToDo = localStorage.GetItem<List<TodoItemModel>>("itemsToDo") ?? new List<TodoItemModel>();
-        _itemsDone = localStorage.GetItem<List<TodoItemModel>>("itemsDone") ?? new List<TodoItemModel>();
+        _itemsToDo = localStorage.GetItem<List<ToDoItemModel>>("itemsToDo") ?? new List<ToDoItemModel>();
+        _itemsDone = localStorage.GetItem<List<ToDoItemModel>>("itemsDone") ?? new List<ToDoItemModel>();
+        _toDoList = new ToDoListModel();
+        _toDoList.ListName = "Alternative List Title";
 
         StateHasChanged();
     }

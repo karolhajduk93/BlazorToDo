@@ -2,14 +2,14 @@
 
 namespace BlazorToDoApp.Models
 {
-    public class TodoItemModel
+    public class ToDoItemModel
     {
         public string Text { get; set; }
         public string ToDoItemId { get; set; }
         public string Date { get; set; }
         public bool Checked { get; set; }
 
-        public TodoItemModel(string text)
+        public ToDoItemModel(string text)
         {
             Text = text;
             ToDoItemId = Guid.NewGuid().ToString();
