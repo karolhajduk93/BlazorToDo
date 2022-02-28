@@ -14,7 +14,7 @@ namespace BlazorToDoApp.Models
 		[BsonId]
 		public string Id { get; set; }
 
-		public string OwnerId { get; set; }
+		public string UserId { get; set; }
 
 		public string ListName { get; set; }
 

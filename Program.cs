@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Blazored.Modal;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace BlazorToDoApp
 {
@@ -17,7 +19,12 @@ namespace BlazorToDoApp
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+            builder.Services.AddAuthorizationCore();
+            builder.Services.AddBlazoredModal();
+
             await builder.Build().RunAsync();
         }
+
     }
 }

@@ -49,16 +49,17 @@
 
 <button class="list-of-lists-button" @onclick="HideShowListOfLists"></button> @*on button clicked show even if screen is small*@
 <div class=@_listOfLists>
-    <div class="list-of-lists-title">Your lists</div>
-    @if (_loggedIn) @*authorizedviewhere instead of this if*@
-    {
-        //list of saved lists
-    }
-    else
-    {
-        <div class="login-incentive">You are not signed.<br/>Sign in to have access to all your lists from anywhere.</div>
-    }
+    <AuthorizeView Roles="Iron Man">
+        <NotAuthorized>
+            <p>Log In to access your list</p>
+        </NotAuthorized>
+        <Authorized>
+            <div class="list-of-lists-title">Your lists</div>
+        </Authorized>
+    </AuthorizeView>
 </div>
+
+<button @onclick="ShowModal" class="btn btn-primary">Show Modal</button>
 
 
 
@@ -71,6 +72,7 @@
     private List<ToDoItemModel> _itemsDone;
     private List<ToDoListModel> _toDoLists;
     private ToDoListModel _toDoList;
+    private UserModel _user;
 
     private string _todoItemText = string.Empty;
     private bool _completedVisible = true;
@@ -81,6 +83,13 @@
     private string _completedContainer = "completed-container-show";
     private string _saveButton = "save-button-hidden";
     private string _listOfLists = "list-of-lists-visible";
+
+
+
+    [CascadingParameter] public IModalService Modal { get; set; }
+
+    void ShowModal() => Modal.Show<Confirm>("Welcome to Blazored Modal");
+
 
 
     public async Task SaveToApi()
