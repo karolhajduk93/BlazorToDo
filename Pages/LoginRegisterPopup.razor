@@ -1,14 +1,15 @@
-﻿<div>
-    <p>Please click one of the buttons below to close or cancel the modal.</p>
-
+﻿<div class="authContainer">
     <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
-    <button @onclick="Login" class="btn btn-primary">Close</button>
-    <button @onclick="Register" class="btn btn-primary">Close</button>
+    <button @onclick="Login" class="btn btn-primary">Login</button>
+    <button @onclick="Register" class="btn btn-primary">Register</button>
 </div>
 
 @code {
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+
+    async Task Cancel() => await BlazoredModal.CancelAsync();
 
     async Task Login()
     {
@@ -23,6 +24,5 @@
         await BlazoredModal.CloseAsync(ModalResult.Ok(true));
     }
 
-    async Task Cancel() => await BlazoredModal.CancelAsync();
 
 }
