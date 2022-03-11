@@ -1,8 +1,8 @@
 ﻿@using BlazorToDoApp.Models
 @inject ISyncLocalStorageService localStorage
 @using System.Net.Http
-@using System.Runtime.Serialization
 @inject HttpClient Http
+@inject IJSRuntime JsRuntime
 
 <div class="container">
     <div class="upper-section">
@@ -48,7 +48,7 @@
 </div>
 
 <button class="list-of-lists-button" @onclick="HideShowListOfLists"></button> @*on button clicked show even if screen is small*@
-<div class=@_listOfLists>
+<div id="listOfLists" class=@(_listOfLists = _listOfListsVisible ? "list-of-lists-visible" : "list-of-lists-hidden")>
     <AuthorizeView Roles="Iron Man">
         <NotAuthorized>
             <p>Log In to access your list</p>
@@ -59,10 +59,10 @@
     </AuthorizeView>
 </div>
 
-<button @onclick="ShowModal" class="btn btn-primary">Show Modal</button>
+<button @onclick="ShowModal" class="btn btn-primary">@asd</button>
 
 
-
+@asd
 
 
 
@@ -84,7 +84,7 @@
     private string _saveButton = "save-button-hidden";
     private string _listOfLists = "list-of-lists-visible";
 
-
+    private static string asd = "asfdAEFASF";
 
     [CascadingParameter] public IModalService Modal { get; set; }
 
@@ -100,7 +100,7 @@
         var x = new ToDoListModel()
         {
             ToDoItems =
-        {
+    {
                 new ToDoItemModel("Task 1") {Checked = true},
                 new ToDoItemModel("Task 2") {Checked = true},
                 new ToDoItemModel("Task 3"),
@@ -180,9 +180,27 @@
         _itemsDone = localStorage.GetItem<List<ToDoItemModel>>("itemsDone") ?? new List<ToDoItemModel>();
         _toDoList = new ToDoListModel();
         _toDoList.ListName = "Alternative List Title";
+        AppState.OnResize += ShowHideListOfListsOnResize;
 
         StateHasChanged();
     }
+
+    public async Task ShowHideListOfListsOnResize()
+    {
+        var width = Int32.Parse(await JsRuntime.InvokeAsync<string>("methods.getWindowWidth"));
+        Console.WriteLine("hello" + width);
+
+        _listOfListsVisible = width > 1150 ? true : false;
+        StateHasChanged();
+    }
+
+    public void ShowHideListOfListsOnClick()
+    {
+        _listOfListsVisible = !_listOfListsVisible;
+        Console.WriteLine(" YYYY " + _listOfListsVisible);
+    }
+
+
 
 }
 

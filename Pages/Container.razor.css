@@ -207,11 +207,25 @@
     display: none;
 }
 
-@media screen and (max-width: 1100px) {
-    .list-of-lists-visible {
-        display: none;
-    }
+
+.list-of-lists-visible {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        max-width: 15%;
+        width: 15%;
+        min-height: 250px;
+        min-width: 180px;
+        left: 12px;
+        top: 120px;
+        border: 1px solid red;
+        background-color: blue;
+       z-index: 1;
 }
+
+
+
+
 .login-incentive {
         position: relative;
         top: 12px;

@@ -25,14 +25,6 @@
 
     private string _dynamicId = string.Empty;
 
-    public static event Func<Task> OnResize;
-
-    [JSInvokable]
-    public static async void ResizedWindow()
-    {
-        await OnResize?.Invoke();
-    }
-
     private void ToggleCheckbox()
     {
         Model.Checked = !Model.Checked;
@@ -51,7 +43,7 @@
 
         await UpdateHappened.InvokeAsync(new Tuple<ToDoItemModel, string>(Model, ""));
 
-          await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.ToDoItemId}");
+        await JsRuntime.InvokeVoidAsync("methods.resizeTextBox", $"Text{Model.ToDoItemId}");
 
         if (text == string.Empty)
             RemoveTodoItem();
@@ -61,19 +53,19 @@
     {
         if (firstRender)
         {
-                        await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.ToDoItemId}");
-                await JsRuntime.InvokeVoidAsync("methods.onLoad");
+            await JsRuntime.InvokeVoidAsync("methods.resizeTextBox", $"Text{Model.ToDoItemId}");
+            await JsRuntime.InvokeVoidAsync("methods.onLoad");
         }
     }
 
-    private async Task BrowserHasResized()
+    private async Task TextBoxHasResized()
     {
-        await JsRuntime.InvokeVoidAsync("methods.resize", $"Text{Model.ToDoItemId}");
+        await JsRuntime.InvokeVoidAsync("methods.resizeTextBox", $"Text{Model.ToDoItemId}");
     }
 
     protected override void OnInitialized()
     {
-        OnResize += BrowserHasResized;
+        AppState.OnResize += TextBoxHasResized;
         _dynamicId = ("Text" + Model.ToDoItemId);
     }
 }
