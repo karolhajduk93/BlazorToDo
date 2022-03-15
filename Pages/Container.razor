@@ -51,18 +51,16 @@
 <div id="listOfLists" class=@(_listOfLists = _listOfListsVisible ? "list-of-lists-visible" : "list-of-lists-hidden")>
     <AuthorizeView Roles="Iron Man">
         <NotAuthorized>
-            <p>Log In to access your list</p>
+            <p class="login-incentive">(NO CONTENT)</p>
+            <p class="login-incentive">Log In to access your list</p>
         </NotAuthorized>
         <Authorized>
-            <div class="list-of-lists-title">Your lists</div>
+            <div class="list-of-lists-title">Your lists</div> @*if list empty "no list saved"*@
         </Authorized>
     </AuthorizeView>
 </div>
 
-<button @onclick="ShowModal" class="btn btn-primary">@asd</button>
-
-
-@asd
+@*<button @onclick="ShowModal" class="btn btn-primary">@asd</button>*@
 
 
 
@@ -100,7 +98,7 @@
         var x = new ToDoListModel()
         {
             ToDoItems =
-    {
+{
                 new ToDoItemModel("Task 1") {Checked = true},
                 new ToDoItemModel("Task 2") {Checked = true},
                 new ToDoItemModel("Task 3"),
