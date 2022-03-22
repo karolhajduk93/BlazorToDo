@@ -25,11 +25,32 @@
     font-size: 20px;
     font-weight: bold;
 }
+
+.current-list-title {
+    background-color: inherit;
+    border: 0;
+    border-bottom: solid 0.5px lightgrey;
+    font-size: 20px;
+    outline: none !important;
+    padding-bottom: 5px;
+    display: block;
+    border-style: none;
+    background-color: transparent;
+    font-family: inherit;
+    outline: none;
+    resize: none;
+    width: 88%;
+    z-index: 1;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
 .title-date {
     font-size: 14px;
     font-weight: bold;
     font-style: italic;
     color: #5687bf;
+    padding-top: 5px;
 }
 
 .login-button {
@@ -210,8 +231,8 @@
 .login-incentive {
     position: relative;
     top: 12px;
-    color: white;
-    background-image: linear-gradient(to right, darkgray, #f5f2ed);
+    color: #f5f2ed;
+    background-image: linear-gradient(to right, #5687bf, #5687bf, #f5f2ed);
     padding: 8px;
     margin: 0;
     text-align: center;

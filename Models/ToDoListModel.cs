@@ -22,12 +22,15 @@ namespace BlazorToDoApp.Models
 
 		public List<ToDoItemModel> ToDoItems { get; set; }
 
+		public List<ToDoItemModel> CompletedItems { get; set; }
+
 		public ToDoListModel()
 		{
 			Id = Guid.NewGuid().ToString(); 
 			ListName = "My Day";
 			Date = DateTime.Now.ToString("dd-MM-yyyy");
 			ToDoItems = new List<ToDoItemModel>();
+			CompletedItems = new List<ToDoItemModel>();
 		}
 	}
 }
