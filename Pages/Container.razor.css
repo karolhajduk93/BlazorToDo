@@ -40,10 +40,16 @@
     outline: none;
     resize: none;
     width: 88%;
-    z-index: 1;
-    word-wrap: break-word;
-    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: 10px;
 }
+
+    .current-list-title:focus {
+        outline: none !important;
+        border: 0.5px solid #5687bf;
+        box-shadow: 0 0 10px #5687bf;
+    }
 
 .title-date {
     font-size: 14px;
@@ -124,6 +130,9 @@
     outline: none !important;
     border: solid 1px grey;
 }
+    .input:focus {
+        box-shadow: 0 0 10px #5687bf;
+    }
 
 .add {
     margin: 2px;

@@ -7,7 +7,7 @@
 <div class="container">
     <div class="upper-section">
         <h2 class="upper-section-title">
-            <textarea class="current-list-title" maxlength="255" @oninput="UpdateLocalListName" @bind="_toDoList.ListName">@_toDoList.ListName</textarea>@*focused add border add ... after 20chars max and min same as item textarea*@
+            <input maxlength="80" class="current-list-title" @bind="@_toDoList.ListName" @oninput="UpdateLocalListName" />
             <div class="title-date">@DateTime.Now.ToString("dddd, MMMM yyyy")</div>
         </h2>
         <div class="login-save-group">
