@@ -59,11 +59,11 @@
     padding-top: 5px;
 }
 
-.login-button {
+.logged-out-button {
     min-width: 25px;
     min-height: 25px;
     padding: 0;
-    background-image: url(/images/login_icon.jpg);
+    background-image: url(/images/logged_out_icon.jpg);
     background-repeat: no-repeat;
     background-size: 25px 25px;
     margin: 5px;
@@ -73,6 +73,26 @@
     border: none;
     cursor: pointer;
     border-radius: 50%;
+}
+
+.logged-in-button {
+    min-width: 25px;
+    min-height: 25px;
+    padding: 0;
+    background-image: url(/images/logged_in_icon.jpg);
+    background-repeat: no-repeat;
+    background-size: 25px 25px;
+    margin: 5px;
+    margin-top: 16px;
+    width: 25px;
+    height: 25px;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.logged-in-button:active {
+    transform: scale(0.75);
 }
 
 .save-button {
@@ -104,12 +124,8 @@
     background-color: #5687bf;
 }
 
-.login-button:active {
+.logged-out-button:active {
     transform: scale(0.75);
-}
-
-.login-button:hover {
-    background-color: #5687bf;
 }
 
 .add_task_block {

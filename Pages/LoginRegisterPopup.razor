@@ -1,28 +1,37 @@
-﻿<div class="authContainer">
-    <button @onclick="Cancel" class="btn btn-secondary">Cancel</button>
-    <button @onclick="Login" class="btn btn-primary">Login</button>
-    <button @onclick="Register" class="btn btn-primary">Register</button>
+﻿@*<AuthorizeView Roles="Iron Man">
+        <NotAuthorized>
+            <div class="authContainer">
+                <div>Get acces to all your lists anywhere</div>
+                <button @onclick="Login" class="btn btn-primary">Login</button>
+                <button @onclick="Register" class="btn btn-primary">Register</button>
+            </div>
+        </NotAuthorized>
+        <Authorized>
+            <div class="authContainer">
+                <div>You successfully logged out</div>
+                <button @onclick="Cancel" class="btn btn-secondary">Ok</button>
+            </div>
+        </Authorized>
+    </AuthorizeView>*@
+
+<div id="myModal" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close" unselectable="&times;"></span>
+        <span class="title">@Title</span>
+        <input class="input" maxlength="255" placeholder="Username" />
+        <input type="password" class="input" maxlength="255" placeholder="Password" />
+        <div class="buttons">
+            <button class="login">Login</button>
+            <button class="register">Register</button>
+        </div>
+    </div>
+
 </div>
 
 @code {
 
-    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
-
-
-    async Task Cancel() => await BlazoredModal.CancelAsync();
-
-    async Task Login()
-    {
-
-        await BlazoredModal.CloseAsync(ModalResult.Ok(true));
-    }
-
-
-    async Task Register()
-    {
-
-        await BlazoredModal.CloseAsync(ModalResult.Ok(true));
-    }
+    string Title = "Login";
 
 
 }

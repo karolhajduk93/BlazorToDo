@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Blazored.Modal;
 using Microsoft.AspNetCore.Components.Authorization;
 using BlazorToDoApp.Shared;
 
@@ -22,7 +21,6 @@ namespace BlazorToDoApp
 
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
             builder.Services.AddAuthorizationCore();
-            builder.Services.AddBlazoredModal();
             builder.Services.AddScoped<AppState>();
 
            await builder.Build().RunAsync();

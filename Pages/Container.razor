@@ -8,11 +8,23 @@
     <div class="upper-section">
         <h2 class="upper-section-title">
             <input maxlength="80" class="current-list-title" @bind="@_toDoList.ListName" @oninput="UpdateLocalListName" />
-            <div class="title-date">@DateTime.Now.ToString("dddd, MMMM yyyy")</div>
+            <div class="title-date">@DateTime.Now.ToString("D")</div>
         </h2>
         <div class="login-save-group">
-            <button title="Save this list" class="@_saveButton"></button>
-            <button title="Log In" class="login-button"></button>
+            <AuthorizeView Roles="Iron Man">
+                <NotAuthorized>
+                    <button title="Log In" class="logged-out-button" @onclick="@(() => _showPopup = true)"></button>
+                    @if (_showPopup)
+                    {
+                      <LoginRegisterPopup />
+                    }
+
+                </NotAuthorized>
+                <Authorized>
+                    <button title="Save this list" class="@_saveButton"></button>
+ 
+                </Authorized>
+            </AuthorizeView>
         </div>
     </div>
     <div class="add_task_block">
@@ -60,7 +72,6 @@
     </AuthorizeView>
 </div>
 
-@*<button @onclick="ShowModal" class="btn btn-primary">@asd</button>*@
 
 
 
@@ -76,6 +87,7 @@
     private bool _completedVisible = true;
     private bool _listOfListsVisible = true;
     private bool _loggedIn = false;
+    private bool _showPopup = false;
 
     private string _dropdownCompletedSign = "dropdown-sign-visible";
     private string _completedContainer = "completed-container-show";
@@ -84,134 +96,130 @@
 
     private static string asd = "asfdAEFASF";
 
-    [CascadingParameter] public IModalService Modal { get; set; }
-
-    void ShowModal() => Modal.Show<LoginRegisterPopup>("Get acces to all your lists anywhere");
-
     protected override void OnInitialized()
     {
         @*        _itemsToDo = localStorage.GetItem<List<ToDoItemModel>>("itemsToDo") ?? new List<ToDoItemModel>();
             _itemsDone = localStorage.GetItem<List<ToDoItemModel>>("itemsDone") ?? new List<ToDoItemModel>();*@
 
-    _toDoList = localStorage.GetItem<ToDoListModel>("list") ?? new ToDoListModel();
+        _toDoList = localStorage.GetItem<ToDoListModel>("list") ?? new ToDoListModel();
 
-    AppState.OnResize += ShowHideListOfListsOnResize;
+        AppState.OnResize += ShowHideListOfListsOnResize;
 
-    StateHasChanged();
-}
+        StateHasChanged();
+    }
 
-public async Task SaveToApi()
-{
-    /*_toDoLists = await Http.GetFromJsonAsync<List<ToDoListModel>>("https://localhost:5003/api/ToDoList");
-    _toDoLists.ForEach(list => Console.WriteLine(list.ListName));
-    _toDoLists.ForEach(list => list.ToDoItems.ForEach(item => Console.WriteLine("{" + item.Text + "}")));*/
-    var x = new ToDoListModel()
+    public async Task SaveToApi()
     {
-        ToDoItems =
+        /*_toDoLists = await Http.GetFromJsonAsync<List<ToDoListModel>>("https://localhost:5003/api/ToDoList");
+        _toDoLists.ForEach(list => Console.WriteLine(list.ListName));
+        _toDoLists.ForEach(list => list.ToDoItems.ForEach(item => Console.WriteLine("{" + item.Text + "}")));*/
+        var x = new ToDoListModel()
+        {
+            ToDoItems =
 {
                 new ToDoItemModel("Task 1") {Checked = true},
                 new ToDoItemModel("Task 2") {Checked = true},
                 new ToDoItemModel("Task 3"),
                 new ToDoItemModel("Task 4"),
             }
-    };
-    Console.WriteLine("Here before tragedy.");
-    var y = await Http.PostAsJsonAsync("https://localhost:5003/api/ToDoList", x);
+        };
+        Console.WriteLine("Here before tragedy.");
+        var y = await Http.PostAsJsonAsync("https://localhost:5003/api/ToDoList", x);
 
-    Console.WriteLine("==========" + x.Id);
-}
-
-private void RerenderForUpdate(Tuple<ToDoItemModel, string> update)
-{
-    switch (update.Item2)
-    {
-        case "remove":
-            _toDoList.ToDoItems.Remove(update.Item1);
-            _toDoList.CompletedItems.Remove(update.Item1);
-            break;
-        case "toggle" when update.Item1.Checked:
-            _toDoList.CompletedItems.Add(update.Item1);
-            _toDoList.ToDoItems.Remove(update.Item1);
-            break;
-        case "toggle":
-            _toDoList.ToDoItems.Add(update.Item1);
-            _toDoList.CompletedItems.Remove(update.Item1);
-            break;
+        Console.WriteLine("==========" + x.Id);
     }
 
-    UpdateLocalStorage("list", _toDoList);
-}
+    private void RerenderForUpdate(Tuple<ToDoItemModel, string> update)
+    {
+        switch (update.Item2)
+        {
+            case "remove":
+                _toDoList.ToDoItems.Remove(update.Item1);
+                _toDoList.CompletedItems.Remove(update.Item1);
+                break;
+            case "toggle" when update.Item1.Checked:
+                _toDoList.CompletedItems.Add(update.Item1);
+                _toDoList.ToDoItems.Remove(update.Item1);
+                break;
+            case "toggle":
+                _toDoList.ToDoItems.Add(update.Item1);
+                _toDoList.CompletedItems.Remove(update.Item1);
+                break;
+        }
 
-private void AddTodo()
-{
-    if (_todoItemText == string.Empty) return;
+        UpdateLocalStorage("list", _toDoList);
+    }
 
-    _toDoList.ToDoItems.Add(new ToDoItemModel(_todoItemText));
-    UpdateLocalStorage("list", _toDoList);
+    private void AddTodo()
+    {
+        if (_todoItemText == string.Empty) return;
 
-    _todoItemText = string.Empty;
-}
+        _toDoList.ToDoItems.Add(new ToDoItemModel(_todoItemText));
+        UpdateLocalStorage("list", _toDoList);
 
-private void KeyboardEventHandler(KeyboardEventArgs args)
-{
-    if (args.Key == "Enter")
-        AddTodo();
-}
+        _todoItemText = string.Empty;
+    }
 
-private void EnableSaveList()
-{
-    _saveButton = "save-button-hidden";
-}
+    private void KeyboardEventHandler(KeyboardEventArgs args)
+    {
+        if (args.Key == "Enter")
+            AddTodo();
+    }
 
-private void HideShowCompletedTasks()
-{
-    _completedVisible = !_completedVisible;
-    _dropdownCompletedSign = _completedVisible ? "dropdown-sign-visible" : "dropdown-sign-hidden";
-    _completedContainer = _completedVisible ? "completed-container-show" : "completed-container-hide";
-}
+    private void EnableSaveList()
+    {
+        _saveButton = "save-button-hidden";
+    }
 
-private void HideShowListOfLists()
-{
-    _listOfListsVisible = !_listOfListsVisible;
-    _listOfLists = _listOfListsVisible ? "list-of-lists-visible" : "list-of-lists-hidden";
-}
+    private void HideShowCompletedTasks()
+    {
+        _completedVisible = !_completedVisible;
+        _dropdownCompletedSign = _completedVisible ? "dropdown-sign-visible" : "dropdown-sign-hidden";
+        _completedContainer = _completedVisible ? "completed-container-show" : "completed-container-hide";
+    }
 
-public void UpdateLocalStorage(string key, List<ToDoItemModel> list)
-{
-    localStorage.SetItem(key, list);
-}
+    private void HideShowListOfLists()
+    {
+        _listOfListsVisible = !_listOfListsVisible;
+        _listOfLists = _listOfListsVisible ? "list-of-lists-visible" : "list-of-lists-hidden";
+    }
 
-public void UpdateLocalStorage(string key, ToDoListModel list)
-{
-    localStorage.SetItem(key, list);
-}
+    public void UpdateLocalStorage(string key, List<ToDoItemModel> list)
+    {
+        localStorage.SetItem(key, list);
+    }
 
-public async Task ShowHideListOfListsOnResize()
-{
-    var width = Int32.Parse(await JsRuntime.InvokeAsync<string>("methods.getWindowWidth"));
+    public void UpdateLocalStorage(string key, ToDoListModel list)
+    {
+        localStorage.SetItem(key, list);
+    }
 
-    _listOfListsVisible = width > 1150 ? true : false;
-    StateHasChanged();
-}
+    public async Task ShowHideListOfListsOnResize()
+    {
+        var width = Int32.Parse(await JsRuntime.InvokeAsync<string>("methods.getWindowWidth"));
 
-public void ShowHideListOfListsOnClick()
-{
-    _listOfListsVisible = !_listOfListsVisible;
-}
+        _listOfListsVisible = width > 1150 ? true : false;
+        StateHasChanged();
+    }
 
-async Task UpdateLocalListName(ChangeEventArgs args)
-{
-    Console.WriteLine("In method");
-    var text = args.Value.ToString();
-    Console.WriteLine(text);
-    _toDoList.ListName = text;
-    UpdateLocalStorage("list", _toDoList);
+    public void ShowHideListOfListsOnClick()
+    {
+        _listOfListsVisible = !_listOfListsVisible;
+    }
 
-    StateHasChanged();
+    async Task UpdateLocalListName(ChangeEventArgs args)
+    {
+        Console.WriteLine("In method");
+        var text = args.Value.ToString();
+        Console.WriteLine(text);
+        _toDoList.ListName = text;
+        UpdateLocalStorage("list", _toDoList);
+
+        StateHasChanged();
 
 
 
-}
+    }
 
 
 
