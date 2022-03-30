@@ -18,13 +18,20 @@
     <!-- Modal content -->
     <div class="modal-content">
         <span class="close" unselectable="&times;"></span>
-        <span class="title">@Title</span>
-        <input class="input" maxlength="255" placeholder="Username" />
+
+        <label class="switch">
+            <input type="checkbox" id="togBtn" @onchange="LoginRegisterToggle">
+            <div class="slider round">
+                <span class="on"></span>
+                <span class="off"></span>
+            </div>
+        </label>
+
+        <input class="input" maxlength="60" placeholder="Username" />
         <input type="password" class="input" maxlength="255" placeholder="Password" />
-        <div class="buttons">
-            <button class="login">Login</button>
-            <button class="register">Register</button>
-        </div>
+        <input type="email" class="input @EmailDisplay" maxlength="255" placeholder="Email" />
+
+        <button class="submit">@Title</button>
     </div>
 
 </div>
@@ -32,6 +39,11 @@
 @code {
 
     string Title = "Login";
+    string EmailDisplay = "email-hidden";
 
-
+    private void LoginRegisterToggle() 
+    { 
+        Title =  Title == "Login" ? "Register" : "Login";
+        EmailDisplay = EmailDisplay == "email-hidden" ? "email-visible" : "email-hidden";
+    }
 }

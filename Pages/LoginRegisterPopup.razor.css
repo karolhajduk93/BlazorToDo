@@ -65,13 +65,90 @@
 
 .title {
     position: absolute;
-    top: 50px;
+    top: 38px;
     color: #5687bf;
-    font-weight: bold;
-    font-size: 25px;
+    font-size: 30px;
 }
 
-.login {
+/*---------------------------------------*/
+
+.switch {
+    margin-bottom: 20px;
+    position: relative;
+    display: inline-block;
+    width: 130px;
+    height: 34px;
+}
+
+    .switch input {
+        display: none;
+    }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f5f2ed;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+    border: 1px solid #5687bf;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: #5687bf;
+        -webkit-transition: .4s;
+        transition: .4s;
+        border-radius: 50%;
+    }
+
+input:checked + .slider {
+    background-color: #f5f2ed;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(95px);
+}
+
+.slider:after {
+    content: 'Login';
+    color: #5687bf;
+    display: block;
+    position: absolute;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    left: 50%;
+    font-size: 12px;
+}
+
+input:checked + .slider:after {
+    content: 'Register';
+}
+
+.email-hidden {
+    visibility: hidden;
+}
+
+.email-visible {
+    visibility: visible;
+}
+
+.submit {
     padding: 0 20px 0 20px;
     width: 45%;
     height: 30px;
@@ -85,35 +162,9 @@
     min-width: 42px;
 }
 
-    .login:active {
-        transform: scale(0.95);
-        filter: brightness(115%);
+    .submit:hover {
+        background-color: #3f638c;
     }
-
-.register {
-    padding: 0 20px 0 20px;
-    width: 45%;
-    height: 30px;
-    margin: 5px;
-    -ms-border-radius: 20px;
-    border-radius: 20px;
-    outline: none !important;
-    border: solid 1px grey;
-    background-color: #5687bf;
-    color: #f5f2ed;
-    min-width: 42px;
-}
-
-    .register:active {
-        transform: scale(0.95);
-        filter: brightness(115%);
+    .submit:active {
+        transform: scale(0.90);
     }
-
-.buttons {
-    display: flex;
-    width: 65%;
-    min-width: 185px;
-    align-items: center;
-    justify-content: center;
-}
-}
