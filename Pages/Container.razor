@@ -16,7 +16,7 @@
                     <button title="Log In" class="logged-out-button" @onclick="@(() => _showPopup = true)"></button>
                     @if (_showPopup)
                     {
-                      <LoginRegisterPopup />
+                      <LoginRegisterPopup Close="() => _showPopup = false" SendData="() => _showPopup = false"/>
                     }
 
                 </NotAuthorized>

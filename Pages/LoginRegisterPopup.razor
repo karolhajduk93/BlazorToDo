@@ -17,7 +17,7 @@
 <div id="myModal" class="modal">
     <!-- Modal content -->
     <div class="modal-content">
-        <span class="close" unselectable="&times;"></span>
+        <button class="close" @onclick="ClosePopup">&times;</button>
 
         <label class="switch">
             <input type="checkbox" id="togBtn" @onchange="LoginRegisterToggle">
@@ -31,7 +31,7 @@
         <input type="password" class="input" maxlength="255" placeholder="Password" />
         <input type="email" class="input @EmailDisplay" maxlength="255" placeholder="Email" />
 
-        <button class="submit">@Title</button>
+        <button class="submit" @onclick="Submit">@Title</button>
     </div>
 
 </div>
@@ -41,9 +41,25 @@
     string Title = "Login";
     string EmailDisplay = "email-hidden";
 
-    private void LoginRegisterToggle() 
-    { 
-        Title =  Title == "Login" ? "Register" : "Login";
+    [Parameter]
+    public EventCallback Close { get; set; }
+
+    [Parameter]
+    public EventCallback SendData { get; set; }
+
+    private void LoginRegisterToggle()
+    {
+        Title = Title == "Login" ? "Register" : "Login";
         EmailDisplay = EmailDisplay == "email-hidden" ? "email-visible" : "email-hidden";
+    }
+
+    async Task ClosePopup()
+    {
+        await Close.InvokeAsync();
+    }
+
+    async Task Submit()
+    {
+        await SendData.InvokeAsync();
     }
 }
