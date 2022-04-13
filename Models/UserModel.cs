@@ -12,5 +12,12 @@ namespace BlazorToDoApp.Models
 		public string UserName { get; set; } = string.Empty;
 
 		public string Password { get; set; } = string.Empty;
+
+		public string Email { get; set; } = string.Empty;
+
+		public UserModel()
+		{
+			UserId = Guid.NewGuid().ToString();
+		}
 	}
 }

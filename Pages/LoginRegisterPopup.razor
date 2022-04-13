@@ -1,21 +1,5 @@
-﻿@*<AuthorizeView Roles="Iron Man">
-        <NotAuthorized>
-            <div class="authContainer">
-                <div>Get acces to all your lists anywhere</div>
-                <button @onclick="Login" class="btn btn-primary">Login</button>
-                <button @onclick="Register" class="btn btn-primary">Register</button>
-            </div>
-        </NotAuthorized>
-        <Authorized>
-            <div class="authContainer">
-                <div>You successfully logged out</div>
-                <button @onclick="Cancel" class="btn btn-secondary">Ok</button>
-            </div>
-        </Authorized>
-    </AuthorizeView>*@
-
+﻿
 <div id="myModal" class="modal">
-    <!-- Modal content -->
     <div class="modal-content">
         <button class="close" @onclick="ClosePopup">&times;</button>
 
@@ -27,19 +11,27 @@
             </div>
         </label>
 
-        <input class="input" maxlength="60" placeholder="Username" />
-        <input type="password" class="input" maxlength="255" placeholder="Password" />
-        <input type="email" class="input @EmailDisplay" maxlength="255" placeholder="Email" />
+        <input class="input @UserDisplay " maxlength="60" placeholder="Username"  required  @bind="@User.UserName" @onclick="@(() => UserDisplay = "touched-user")"/>
+        <input type="password" class="input @PasswordDisplay" maxlength="60" placeholder="Password"  minlength="8" required @bind="@User.Password" @onclick="@(() => PasswordDisplay = "touched-password")"/>
+        <input type="email" class="input @EmailDisplay @EmailHidden" maxlength="60" placeholder="Email" required @bind="@User.Email" @onclick="@(() => @EmailDisplay = "touched-email")"/>
 
-        <button class="submit" @onclick="Submit">@Title</button>
+        <button type="submit" class="submit" @onclick="Submit">@popupState</button>
+        <span class="verification-error">@ErrorText</span>
     </div>
-
 </div>
+
 
 @code {
 
-    string Title = "Login";
-    string EmailDisplay = "email-hidden";
+    string EmailDisplay;
+    string PasswordDisplay;
+    string UserDisplay;
+    string ErrorText = "";
+    string EmailHidden = "email-hidden";
+    enum PopupState { Login, Register }
+    PopupState popupState = PopupState.Login;
+
+    UserModel User = new();
 
     [Parameter]
     public EventCallback Close { get; set; }
@@ -49,8 +41,8 @@
 
     private void LoginRegisterToggle()
     {
-        Title = Title == "Login" ? "Register" : "Login";
-        EmailDisplay = EmailDisplay == "email-hidden" ? "email-visible" : "email-hidden";
+        popupState = popupState == PopupState.Login ? PopupState.Register : PopupState.Login;
+        EmailHidden = EmailHidden == "email-hidden" ? "email-visible" : "email-hidden";
     }
 
     async Task ClosePopup()
@@ -60,6 +52,25 @@
 
     async Task Submit()
     {
+
+        ErrorText = "";
+
+        switch (popupState)
+        {
+            case PopupState.Login:
+                String.IsNullOrWhiteSpace(User.UserName); ///////////
+                break;
+            case PopupState.Register:
+                break;
+
+        }
+
         await SendData.InvokeAsync();
+    }
+
+
+    private void Working()
+    {
+        Console.WriteLine("Its really working");
     }
 }

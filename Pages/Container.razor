@@ -14,15 +14,22 @@
             <AuthorizeView Roles="Iron Man">
                 <NotAuthorized>
                     <button title="Log In" class="logged-out-button" @onclick="@(() => _showPopup = true)"></button>
-                    @if (_showPopup)
+                    @if (_showPopup is true)
                     {
-                      <LoginRegisterPopup Close="() => _showPopup = false" SendData="() => _showPopup = false"/>
+                        <LoginRegisterPopup Close="() => _showPopup = false" SendData="() => _showPopup = false"/>
                     }
 
                 </NotAuthorized>
                 <Authorized>
                     <button title="Save this list" class="@_saveButton"></button>
- 
+                    <button title="Log Out" class="logged-in-button" @onclick="@(() => _showPopup = true)"></button> @*TODO: send remove auth token*@
+                    @if (_showPopup is true)
+                    {
+  
+                        <div class="info-modal">
+                            <div class="logged-out-text">You logged out</div>
+                        </div>
+                    }
                 </Authorized>
             </AuthorizeView>
         </div>
@@ -77,10 +84,8 @@
 
 @code {
 
-    private List<ToDoItemModel> _itemsToDo;
-    private List<ToDoItemModel> _itemsDone;
     private List<ToDoListModel> _toDoLists;
-    private ToDoListModel _toDoList; //change _itemsToDo na _toDoList
+    private ToDoListModel _toDoList;
     private UserModel _user;
 
     private string _todoItemText = string.Empty;
@@ -94,13 +99,8 @@
     private string _saveButton = "save-button-hidden";
     private string _listOfLists = "list-of-lists-visible";
 
-    private static string asd = "asfdAEFASF";
-
     protected override void OnInitialized()
     {
-        @*        _itemsToDo = localStorage.GetItem<List<ToDoItemModel>>("itemsToDo") ?? new List<ToDoItemModel>();
-            _itemsDone = localStorage.GetItem<List<ToDoItemModel>>("itemsDone") ?? new List<ToDoItemModel>();*@
-
         _toDoList = localStorage.GetItem<ToDoListModel>("list") ?? new ToDoListModel();
 
         AppState.OnResize += ShowHideListOfListsOnResize;

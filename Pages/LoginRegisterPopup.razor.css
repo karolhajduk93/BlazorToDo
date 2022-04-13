@@ -58,7 +58,7 @@
 
 .input {
     padding: 0 20px 0 20px;
-    width: 55%;
+    width: 45%;
     height: 30px;
     margin: 5px;
     -ms-border-radius: 20px;
@@ -66,6 +66,7 @@
     outline: none !important;
     border: solid 1px grey;
 }
+
 
 .title {
     position: absolute;
@@ -147,6 +148,19 @@ input:checked + .slider:after {
     content: 'Register';
 }
 
+
+.input:invalid.touched-user {
+        border-color: red;
+    }
+
+.input:invalid.touched-password {
+    border-color: red;
+}
+
+.input:invalid.touched-email{
+    border-color: red;
+}
+
 .email-hidden {
     visibility: hidden;
 }
@@ -176,3 +190,50 @@ input:checked + .slider:after {
     .submit:active {
         transform: scale(0.90);
     }
+
+
+.logged-out-text {
+
+    width: 120px;
+    background-color: #5687bf;
+    color: #f5f2ed;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 16px;
+    z-index: 1;
+}
+
+.info-modal {
+    position: relative;
+    overflow: hidden;
+    position: absolute;
+    animation: bouncy-b-0w4d5zzdcj 4s linear both;
+    transform-origin: left center;
+    width: 0px;
+}
+
+
+@keyframes bouncy {
+    0% {
+        width: 0;
+
+    }
+
+    12.5% {
+        width: 120px;
+    }
+
+    87.5% {
+        width: 120px;
+    }
+
+    100% {
+        width: 0;
+    }
+}
+
+.verification-error {
+    color: red;
+    margin-top: 10px;
+    line-break: anywhere;
+}
