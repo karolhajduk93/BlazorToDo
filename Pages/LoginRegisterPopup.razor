@@ -1,4 +1,8 @@
-﻿
+﻿@inject ISyncLocalStorageService localStorage
+@using System.Net.Http
+@inject HttpClient Http
+@inject AuthenticationStateProvider authStateProvider
+
 <div id="myModal" class="modal">
     <div class="modal-content">
         <button class="close" @onclick="ClosePopup">&times;</button>
@@ -11,9 +15,9 @@
             </div>
         </label>
 
-        <input class="input @UserDisplay " maxlength="60" placeholder="Username"  required  @bind="@User.UserName" @onclick="@(() => UserDisplay = "touched-user")"/>
-        <input type="password" class="input @PasswordDisplay" maxlength="60" placeholder="Password"  minlength="8" required @bind="@User.Password" @onclick="@(() => PasswordDisplay = "touched-password")"/>
-        <input type="email" class="input @EmailDisplay @EmailHidden" maxlength="60" placeholder="Email" required @bind="@User.Email" @onclick="@(() => @EmailDisplay = "touched-email")"/>
+        <input class="input @UserDisplay " maxlength="60" placeholder="Username" required @bind="@User.Username" @onclick="@(() => UserDisplay = "touched-user")" />
+        <input type="password" class="input @PasswordDisplay" maxlength="60" placeholder="Password" minlength="8" required @bind="@User.Password" @onclick="@(() => PasswordDisplay = "touched-password")" />
+        <input type="email" class="input @EmailDisplay @EmailHidden" maxlength="60" placeholder="Email" required @bind="@User.Email" @onclick="@(() => @EmailDisplay = "touched-email")" />
 
         <button type="submit" class="submit" @onclick="Submit">@popupState</button>
         <span class="verification-error">@ErrorText</span>
@@ -28,20 +32,24 @@
     string UserDisplay;
     string ErrorText = "";
     string EmailHidden = "email-hidden";
-    enum PopupState { Login, Register }
+    public enum PopupState { Login, Register }
     PopupState popupState = PopupState.Login;
 
-    UserModel User = new();
+
+    public UserModel User = new();
+    UserDto userDto = new();
 
     [Parameter]
     public EventCallback Close { get; set; }
 
     [Parameter]
-    public EventCallback SendData { get; set; }
+    public EventCallback<Tuple<UserModel, PopupState>> SendData { get; set; }
 
     private void LoginRegisterToggle()
     {
         popupState = popupState == PopupState.Login ? PopupState.Register : PopupState.Login;
+        User.Email = "";
+        EmailDisplay = "";
         EmailHidden = EmailHidden == "email-hidden" ? "email-visible" : "email-hidden";
     }
 
@@ -54,23 +62,68 @@
     {
 
         ErrorText = "";
-
-        switch (popupState)
+        if (string.IsNullOrWhiteSpace(User.Username))
         {
-            case PopupState.Login:
-                String.IsNullOrWhiteSpace(User.UserName); ///////////
-                break;
-            case PopupState.Register:
-                break;
-
+            ErrorText = "Provide Username";
+            return;
+        }
+        else if (string.IsNullOrWhiteSpace(User.Password))
+        {
+            ErrorText = "Provide Password";
+            return;
+        }
+        else if (User.Password.Length < 8)
+        {
+            ErrorText = "Password has to be at least 8 characters long";
+            return;
+        }
+        else if (popupState.Equals(PopupState.Register) && !User.Email.Contains('@'))
+        {
+            ErrorText = "Your email should include @";
+            return;
+        }
+        else if (popupState.Equals(PopupState.Register) && User.Email.EndsWith('@'))
+        {
+            ErrorText = "Your email shouldn't end with @";
+            return;
         }
 
-        await SendData.InvokeAsync();
+        if (popupState.Equals(PopupState.Register))
+        {
+            await Register(userDto);
+        }
+        else if (popupState.Equals(PopupState.Login))
+        {
+            await Login(userDto);
+        }
+
     }
 
 
-    private void Working()
+    private async Task Register(UserDto request) 
     {
-        Console.WriteLine("Its really working");
+    }
+
+    private async Task Login(UserDto request) 
+    {
+
+        //if (User.Username != request.Username)
+        //{
+        //    ErrorText = "User not found";
+        //}
+
+        //if (VerifyPasswordHash(request.Password, User.PasswordHash, User.PasswordSalt) != true)
+        //{
+        //    ErrorText = "Wrong password";
+        //}
+
+        //string token = CreateToken(User);
+
+        HttpResponseMessage result = await Http.PostAsJsonAsync("https://localhost:5003/api/auth", userDto);
+        var token = await result.Content.ReadAsStringAsync();
+        Console.WriteLine(token);
+        localStorage.SetItem("token", token);
+        await authStateProvider.GetAuthenticationStateAsync(); 
+        await Close.InvokeAsync();
     }
 }

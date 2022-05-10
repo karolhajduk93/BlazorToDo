@@ -234,6 +234,5 @@ input:checked + .slider:after {
 
 .verification-error {
     color: red;
-    margin-top: 10px;
     line-break: anywhere;
 }

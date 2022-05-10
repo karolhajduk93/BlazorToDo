@@ -16,7 +16,7 @@
                     <button title="Log In" class="logged-out-button" @onclick="@(() => _showPopup = true)"></button>
                     @if (_showPopup is true)
                     {
-                        <LoginRegisterPopup Close="() => _showPopup = false" SendData="() => _showPopup = false"/>
+                        <LoginRegisterPopup Close="() => _showPopup = false" /> @*SendData = "ValidateUser"*@
                     }
 
                 </NotAuthorized>
@@ -74,7 +74,19 @@
             <p class="login-incentive">Log In to access your list</p>
         </NotAuthorized>
         <Authorized>
-            <div class="list-of-lists-title">Your lists</div> @*if list empty "no list saved"*@
+            @if (_toDoLists.IsNullOrEmpty())
+            {
+                <div class="list-of-lists-title">No list saved</div>
+            }
+            else
+            {
+                <div class="list-of-lists-title">Your lists</div>
+                @foreach (var item in _toDoLists)
+                {
+                    <div class="list-of-lists-items">@item.ListName</div>
+                }
+            }
+
         </Authorized>
     </AuthorizeView>
 </div>
@@ -86,7 +98,7 @@
 
     private List<ToDoListModel> _toDoLists;
     private ToDoListModel _toDoList;
-    private UserModel _user;
+    //private UserModel _user;
 
     private string _todoItemText = string.Empty;
     private bool _completedVisible = true;
@@ -102,8 +114,13 @@
     protected override void OnInitialized()
     {
         _toDoList = localStorage.GetItem<ToDoListModel>("list") ?? new ToDoListModel();
-
+        _toDoLists = new()
+        {
+            new ToDoListModel() { ListName = "First List with veeeeeeeeeeeeeeeeeeeeeery long title" },
+            new ToDoListModel() { ListName = "Second List " }
+        };
         AppState.OnResize += ShowHideListOfListsOnResize;
+
 
         StateHasChanged();
     }
@@ -149,6 +166,15 @@
 
         UpdateLocalStorage("list", _toDoList);
     }
+
+    private void ValidateUser(Tuple<UserModel, LoginRegisterPopup.PopupState> userInput)
+    {
+
+        //userInput.Item2.Equals
+
+        //UpdateLocalStorage("user", userInput);
+    }
+
 
     private void AddTodo()
     {
@@ -207,7 +233,7 @@
         _listOfListsVisible = !_listOfListsVisible;
     }
 
-    async Task UpdateLocalListName(ChangeEventArgs args)
+    public void UpdateLocalListName(ChangeEventArgs args)
     {
         Console.WriteLine("In method");
         var text = args.Value.ToString();
@@ -216,9 +242,6 @@
         UpdateLocalStorage("list", _toDoList);
 
         StateHasChanged();
-
-
-
     }
 
 

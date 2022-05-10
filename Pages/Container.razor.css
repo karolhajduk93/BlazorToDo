@@ -42,7 +42,7 @@
     width: 88%;
     overflow: hidden;
     text-overflow: ellipsis;
-    border-radius: 10px;
+    border-radius: 20px;
 }
 
     .current-list-title:focus {
@@ -247,6 +247,7 @@
     min-width: 180px;
     top: 120px;
     z-index: 1;
+    align-items: center;
 }
 
 .list-of-lists-hidden {
@@ -263,13 +264,31 @@
     text-align: center;
     font-size: 14px;
     font-style: italic;
+    width: 100%;
 }
 
 .list-of-lists-title {
-    width: 100%;
+    width: 90%;
+    border-bottom: solid 0.5px lightgrey;
+    color: white;
+    padding: 6px;
+    text-align: center;
+    background: #5687bf;
+    border-radius: 20px;
+    margin: 10px;
+}
+
+.list-of-lists-items {
+    width: 80%;
     border-bottom: solid 0.5px lightgrey;
     color: black;
-    padding: 6px;
+     padding: 6px;
+    text-align: center;
+    background: #f5f2ed;
+    border-radius: 20px;
+    margin: 1px;
+    line-break: anywhere;
+    border-top: solid 0.5px lightgray;
 }
 
 .list-of-lists-button {
