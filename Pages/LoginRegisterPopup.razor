@@ -42,8 +42,8 @@
     [Parameter]
     public EventCallback Close { get; set; }
 
-    [Parameter]
-    public EventCallback<Tuple<UserModel, PopupState>> SendData { get; set; }
+    //[Parameter]
+    //public EventCallback<Tuple<UserModel, PopupState>> SendData { get; set; }
 
     private void LoginRegisterToggle()
     {
@@ -100,11 +100,11 @@
     }
 
 
-    private async Task Register(UserDto request) 
+    private async Task Register(UserDto request)
     {
     }
 
-    private async Task Login(UserDto request) 
+    private async Task Login(UserDto request)
     {
 
         //if (User.Username != request.Username)
@@ -119,11 +119,11 @@
 
         //string token = CreateToken(User);
 
-        HttpResponseMessage result = await Http.PostAsJsonAsync("https://localhost:5003/api/auth", userDto);
+        HttpResponseMessage result = await Http.PostAsJsonAsync("https://localhost:5003/api/auth/login", userDto);
         var token = await result.Content.ReadAsStringAsync();
         Console.WriteLine(token);
         localStorage.SetItem("token", token);
-        await authStateProvider.GetAuthenticationStateAsync(); 
+        await authStateProvider.GetAuthenticationStateAsync();
         await Close.InvokeAsync();
     }
 }

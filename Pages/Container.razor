@@ -3,6 +3,7 @@
 @using System.Net.Http
 @inject HttpClient Http
 @inject IJSRuntime JsRuntime
+@inject AuthenticationStateProvider authStateProvider
 
 <div class="container">
     <div class="upper-section">
@@ -16,20 +17,21 @@
                     <button title="Log In" class="logged-out-button" @onclick="@(() => _showPopup = true)"></button>
                     @if (_showPopup is true)
                     {
-                        <LoginRegisterPopup Close="() => _showPopup = false" /> @*SendData = "ValidateUser"*@
+                        <LoginRegisterPopup Close="() => _showPopup = false" />
                     }
 
-                </NotAuthorized>
-                <Authorized>
-                    <button title="Save this list" class="@_saveButton"></button>
-                    <button title="Log Out" class="logged-in-button" @onclick="@(() => _showPopup = true)"></button> @*TODO: send remove auth token*@
-                    @if (_showPopup is true)
+                    @if (_justLoggedOut)
                     {
-  
                         <div class="info-modal">
                             <div class="logged-out-text">You logged out</div>
                         </div>
                     }
+
+                </NotAuthorized>
+                <Authorized>
+                    <button title="Save this list" class="save-button"></button>
+                    <button title="Log Out" class="logged-in-button" @onclick="Logout"></button>
+  
                 </Authorized>
             </AuthorizeView>
         </div>
@@ -105,10 +107,11 @@
     private bool _listOfListsVisible = true;
     private bool _loggedIn = false;
     private bool _showPopup = false;
+    private bool _justLoggedOut = false;
 
     private string _dropdownCompletedSign = "dropdown-sign-visible";
     private string _completedContainer = "completed-container-show";
-    private string _saveButton = "save-button-hidden";
+
     private string _listOfLists = "list-of-lists-visible";
 
     protected override void OnInitialized()
@@ -123,6 +126,18 @@
 
 
         StateHasChanged();
+    }
+
+    private async Task Logout()
+    {
+        _justLoggedOut = true;
+        StateHasChanged();
+        localStorage.RemoveItem("token");
+
+
+
+        await authStateProvider.GetAuthenticationStateAsync();
+        //StateHasChanged();
     }
 
     public async Task SaveToApi()
@@ -190,11 +205,6 @@
     {
         if (args.Key == "Enter")
             AddTodo();
-    }
-
-    private void EnableSaveList()
-    {
-        _saveButton = "save-button-hidden";
     }
 
     private void HideShowCompletedTasks()
