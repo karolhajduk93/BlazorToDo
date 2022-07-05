@@ -37,7 +37,7 @@
 
 
     public UserModel User = new();
-    UserDto userDto = new();
+    UserDto userDto; /////////////////have to map USer to userDto
 
     [Parameter]
     public EventCallback Close { get; set; }
@@ -90,21 +90,21 @@
 
         if (popupState.Equals(PopupState.Register))
         {
-            await Register(userDto);
+            await Register(User.mapToDto());
         }
         else if (popupState.Equals(PopupState.Login))
         {
-            await Login(userDto);
+            await Login(User.mapToDto());
         }
 
     }
 
 
-    private async Task Register(UserDto request)
+    private async Task Register(UserDto userDto)
     {
     }
 
-    private async Task Login(UserDto request)
+    private async Task Login(UserDto userDto)
     {
 
         //if (User.Username != request.Username)
@@ -118,12 +118,25 @@
         //}
 
         //string token = CreateToken(User);
-
+        Console.WriteLine("HERE");
+        Console.WriteLine(userDto.Username + "-------------" + userDto.Password);
         HttpResponseMessage result = await Http.PostAsJsonAsync("https://localhost:5003/api/auth/login", userDto);
-        var token = await result.Content.ReadAsStringAsync();
-        Console.WriteLine(token);
-        localStorage.SetItem("token", token);
-        await authStateProvider.GetAuthenticationStateAsync();
-        await Close.InvokeAsync();
+
+        if (result.IsSuccessStatusCode)
+        {
+            var token = await result.Content.ReadAsStringAsync();
+            Console.WriteLine(token);
+            localStorage.SetItem("token", token);
+            await authStateProvider.GetAuthenticationStateAsync();
+            await Close.InvokeAsync();
+        }
+        else
+        {
+            Console.WriteLine(":(");
+            ErrorText = await result.Content.ReadAsStringAsync();
+        }
+
     }
+
+  
 }
