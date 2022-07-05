@@ -128,6 +128,14 @@
         StateHasChanged();
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {  
+            await JsRuntime.InvokeVoidAsync("methods.onLoad");
+        }
+    }
+
     private async Task Logout()
     {
         _justLoggedOut = true;
