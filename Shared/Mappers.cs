@@ -5,7 +5,7 @@ namespace BlazorToDoApp.Shared
 {
     public static class Mappers 
     {
-        public static UserDto mapToDto(this UserModel userModel)
+        public static UserDto MapToDto(this UserModel userModel)
         {
             return new UserDto()
             {
