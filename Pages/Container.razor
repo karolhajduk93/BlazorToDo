@@ -12,7 +12,8 @@
             <div class="title-date">@DateTime.Now.ToString("D")</div>
         </h2>
         <div class="login-save-group">
-            <AuthorizeView Roles="Iron Man">
+            <AuthorizeView>
+                @* Roles="Iron Man" *@
                 <NotAuthorized>
                     <button title="Log In" class="logged-out-button" @onclick="@(() => _showPopup = true)"></button>
                     @if (_showPopup is true)
@@ -31,7 +32,7 @@
                 <Authorized>
                     <button title="Save this list" class="save-button"></button>
                     <button title="Log Out" class="logged-in-button" @onclick="Logout"></button>
-  
+
                 </Authorized>
             </AuthorizeView>
         </div>
@@ -70,7 +71,8 @@
 
 <button class="list-of-lists-button" @onclick="HideShowListOfLists"></button>
 <div id="listOfLists" class=@(_listOfLists = _listOfListsVisible ? "list-of-lists-visible" : "list-of-lists-hidden")>
-    <AuthorizeView Roles="Iron Man">
+    <AuthorizeView>
+        @* Roles="Iron Man" *@
         <NotAuthorized>
             <p class="login-incentive">(NO CONTENT)</p>
             <p class="login-incentive">Log In to access your list</p>
@@ -161,7 +163,8 @@
                 new ToDoItemModel("Task 2") {Checked = true},
                 new ToDoItemModel("Task 3"),
                 new ToDoItemModel("Task 4"),
-            }
+            },
+
         };
         Console.WriteLine("Here before tragedy.");
         var y = await Http.PostAsJsonAsync("https://localhost:5003/api/ToDoList", x);
